@@ -13,7 +13,7 @@ export function Header() {
           <Link to="/policies">Policies</Link>
         </Button>
         <Button variant="link" asChild>
-          <Link to="/reports">Reports</Link>
+          <Link to="/report">Report</Link>
         </Button>
         <Button>Logout</Button>
       </div>
