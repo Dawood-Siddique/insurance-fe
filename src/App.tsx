@@ -1,22 +1,22 @@
-import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Policies from './pages/Policies';
+import Report from './pages/Report';
+import { Header } from './components/header';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
   return (
-    <div>
-      {isLoggedIn ? (
-        <Dashboard />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </div>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/login" element={<Login onLogin={() => {}} />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/policies" element={<Policies />} />
+        <Route path="/reports" element={<Report />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+      </Routes>
+    </Router>
   );
 }
 
