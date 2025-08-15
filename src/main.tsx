@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard.tsx'
 import Report from './pages/Report.tsx'
 import Policies from './pages/Policies.tsx'
 import Login from './pages/Login.tsx'
+import AddPolicy from './pages/AddPolicy.tsx'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
   {path:'/policies', element:<Policies/>},
   {path:'/', element:<App/>},
   {path:'/login', element:<Login onLogin={()=>{}}/>},
+  {path:'/add-policy', element:<AddPolicy/>}
 ])
 
 createRoot(document.getElementById('root')!).render(
