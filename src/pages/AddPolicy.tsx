@@ -1,15 +1,17 @@
 import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { Combobox } from "@/components/ui/combobox"
+import { useState } from "react"
 
-import { ComboboxDemo } from "@/components/ui/combobox"
+const insuranceCompanies = [
+    { value: "allianz", label: "Allianz" },
+    { value: "axa", label: "AXA" },
+    { value: "generali", label: "Generali" },
+    { value: "zurich", label: "Zurich" },
+]
 
 export default function AddPolicy() {
+    const [company, setCompany] = useState("")
+
     return (
         <div className="flex justify-center h-screen ">
             <div className="flex-row">
@@ -22,18 +24,15 @@ export default function AddPolicy() {
                     <div>
                         Insurance Company
                         <div>
-                            <ComboboxDemo />
+                            <Combobox
+                                items={insuranceCompanies}
+                                value={company}
+                                onChange={setCompany}
+                                placeholder="Select company..."
+                                searchPlaceholder="Search company..."
+                                noResultsMessage="No company found."
+                            />
                         </div>
-                        {/* <Select>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Theme" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="light">Light</SelectItem>
-                                <SelectItem value="dark">Dark</SelectItem>
-                                <SelectItem value="system">System</SelectItem>
-                            </SelectContent>
-                        </Select> */}
                     </div>
                 </div>
 
@@ -44,17 +43,7 @@ export default function AddPolicy() {
                     </div>
                     <div>
                         Insured Name
-                        <Select>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Theme" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="light">Light</SelectItem>
-                                <SelectItem value="dark">Dark</SelectItem>
-                                <SelectItem value="system">System</SelectItem>
-                            </SelectContent>
-                        </Select>
-
+                        <Input type="text" />
                     </div>
                 </div>
 
@@ -71,17 +60,7 @@ export default function AddPolicy() {
 
                 <div>
                     Agent Name
-                    <Select>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Theme" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="light">Light</SelectItem>
-                            <SelectItem value="dark">Dark</SelectItem>
-                            <SelectItem value="system">System</SelectItem>
-                        </SelectContent>
-                    </Select>
-
+                    <Input type="text" />
                 </div>
             </div>
         </div>
