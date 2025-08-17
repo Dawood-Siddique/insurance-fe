@@ -10,7 +10,7 @@ const insuranceCompanies = [
 ]
 
 export default function AddPolicy() {
-    const [company, setCompany] = useState("")
+    const [company, setCompany] = useState(" ")
 
     return (
         <div className="flex justify-center h-screen ">
