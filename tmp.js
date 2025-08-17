@@ -1,4 +1,6 @@
 
 function getData(){
-    return 
+    return new Promise((resolve, reject) => {
+        
+    })
 }
