@@ -99,13 +99,13 @@ export default function AddPolicy() {
                                 <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                             </div>
                             <div>
-                                <div className="flex justify-between items-center mb-1">
+                                <div className="inline-flex items-center gap-2 mb-1">
                                     <label className="block text-sm font-medium text-gray-700">Insurance Company</label>
                                     <AddNewEntityDialog
                                         dialogTitle="Add New Insurance Company"
                                         dialogDescription="Enter the name of the new insurance company."
                                         inputLabel="Company Name"
-                                        triggerText="Add New?"
+                                        triggerText="Add New Company?"
                                         onSave={handleSaveNewCompany}
                                     />
                                 </div>
