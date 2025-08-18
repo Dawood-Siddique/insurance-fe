@@ -2,8 +2,9 @@ import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/ui/combobox"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { AddNewEntityDialog } from "@/components/add-new-entity-dialog"
 
-const insuranceCompanyObj = [
+const initialInsuranceCompanyObj = [
     { value: "allianz", label: "Allianz" },
     { value: "axa", label: "AXA" },
     { value: "generali", label: "Generali" },
@@ -48,6 +49,8 @@ export default function AddPolicy() {
     const [remarks, setRemarks] = useState("")
     const [referenceNumber, setReferenceNumber] = useState("")
 
+    const [insuranceCompanies, setInsuranceCompanies] = useState(initialInsuranceCompanyObj);
+
     useEffect(() => {
         const calculatedProfit = (parseFloat(clientPrice || '0') - parseFloat(newCoRates || '0')).toFixed(2);
         setProfit(calculatedProfit);
@@ -74,6 +77,13 @@ export default function AddPolicy() {
         console.log(policyData);
     };
 
+    const handleSaveNewCompany = (newCompanyName: string) => {
+        const newValue = newCompanyName.toLowerCase().replace(/\s+/g, '');
+        const newLabel = newCompanyName;
+        setInsuranceCompanies(prev => [...prev, { value: newValue, label: newLabel }]);
+        setCompany(newValue); // Optionally select the newly added company
+    };
+
     return (
         <div className="container mx-auto p-4">
             <div className="max-w-4xl mx-auto">
@@ -89,9 +99,18 @@ export default function AddPolicy() {
                                 <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Insurance Company</label>
+                                <div className="flex justify-between items-center mb-1">
+                                    <label className="block text-sm font-medium text-gray-700">Insurance Company</label>
+                                    <AddNewEntityDialog
+                                        dialogTitle="Add New Insurance Company"
+                                        dialogDescription="Enter the name of the new insurance company."
+                                        inputLabel="Company Name"
+                                        triggerText="Add New?"
+                                        onSave={handleSaveNewCompany}
+                                    />
+                                </div>
                                 <Combobox
-                                    items={insuranceCompanyObj}
+                                    items={insuranceCompanies}
                                     value={company}
                                     onChange={setCompany}
                                     placeholder="Select company..."
