@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/ui/combobox"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 
 const insuranceCompanyObj = [
@@ -47,6 +47,11 @@ export default function AddPolicy() {
     const [profit, setProfit] = useState("")
     const [remarks, setRemarks] = useState("")
     const [referenceNumber, setReferenceNumber] = useState("")
+
+    useEffect(() => {
+        const calculatedProfit = (parseFloat(clientPrice || '0') - parseFloat(newCoRates || '0')).toFixed(2);
+        setProfit(calculatedProfit);
+    }, [clientPrice, newCoRates]);
 
     const handleSave = () => {
         const policyData = {
@@ -146,8 +151,9 @@ export default function AddPolicy() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Profit</label>
-                                <Input type="text" value={profit} onChange={(e) => setProfit(e.target.value)} />
+                                <Input type="text" value={profit} readOnly />
                             </div>
+                            
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
                                 <Combobox
