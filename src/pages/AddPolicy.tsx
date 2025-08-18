@@ -37,6 +37,16 @@ export default function AddPolicy() {
     const [paymentStatus, setPaymentStatus] = useState("")
     const [agentName, setAgentName] = useState("")
     const [insuredName, setInsuredName] = useState("")
+    const [date, setDate] = useState("")
+    const [policyNumber, setPolicyNumber] = useState("")
+    const [carModel, setCarModel] = useState("")
+    const [engineType, setEngineType] = useState("")
+    const [grossPrice, setGrossPrice] = useState("")
+    const [newCoRates, setNewCoRates] = useState("")
+    const [clientPrice, setClientPrice] = useState("")
+    const [profit, setProfit] = useState("")
+    const [remarks, setRemarks] = useState("")
+    const [referenceNumber, setReferenceNumber] = useState("")
 
 
     return (
@@ -46,7 +56,7 @@ export default function AddPolicy() {
                 <div className="flex flex-row gap-4">
                     <div>
                         Date
-                        <Input type="date" />
+                        <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                     </div>
                     <div>
                         Insurance Company
@@ -66,7 +76,7 @@ export default function AddPolicy() {
                 <div className="flex flex-row gap-4">
                     <div>
                         Policy Number
-                        <Input type="text" />
+                        <Input type="text" value={policyNumber} onChange={(e) => setPolicyNumber(e.target.value)} />
                     </div>
                     <div>
                         Insured Name
@@ -86,11 +96,11 @@ export default function AddPolicy() {
                 <div className="flex flex-row gap-4">
                     <div>
                         Car Model
-                        <Input type="text" />
+                        <Input type="text" value={carModel} onChange={(e) => setCarModel(e.target.value)} />
                     </div>
                     <div>
                         Engine Type
-                        <Input type="text" />
+                        <Input type="text" value={engineType} onChange={(e) => setEngineType(e.target.value)} />
                     </div>
                 </div>
 
@@ -116,22 +126,22 @@ export default function AddPolicy() {
                     <div className="flex flex-row gap-4">
                         <div>
                             Gross/Price
-                            <Input type="text" />
+                            <Input type="text" value={grossPrice} onChange={(e) => setGrossPrice(e.target.value)} />
                         </div>
                         <div>
                             New CO Rates
-                            <Input type="text" />
+                            <Input type="text" value={newCoRates} onChange={(e) => setNewCoRates(e.target.value)} />
                         </div>
                     </div>
 
                     <div className="flex flex-row gap-4">
                         <div>
                             Client Price
-                            <Input type="text" />
+                            <Input type="text" value={clientPrice} onChange={(e) => setClientPrice(e.target.value)} />
                         </div>
                         <div>
                             Profit
-                            <Input type="text" />
+                            <Input type="text" value={profit} onChange={(e) => setProfit(e.target.value)} />
                         </div>
                     </div>
 
@@ -167,12 +177,12 @@ export default function AddPolicy() {
 
                     <div>
                         Remarks
-                        <Input type="text" />
+                        <Input type="text" value={remarks} onChange={(e) => setRemarks(e.target.value)} />
                     </div>
 
                     <div>
                         Reference Number
-                        <Input type="text" />
+                        <Input type="text" value={referenceNumber} onChange={(e) => setReferenceNumber(e.target.value)} />
                     </div>
 
                 </div>
