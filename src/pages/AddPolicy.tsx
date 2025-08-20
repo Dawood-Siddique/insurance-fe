@@ -4,84 +4,137 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { AddNewEntityDialog } from "@/components/add-new-entity-dialog"
 
-const initialInsuranceCompanyObj = [
-    { value: "allianz", label: "Allianz" },
-    { value: "axa", label: "AXA" },
-    { value: "generali", label: "Generali" },
-    { value: "zurich", label: "Zurich" },
-]
+// The hardcoded data objects are removed, as we will fetch from the backend.
 
 const paymentMethodObj = [
-    { value: 'cash', label: 'cash' },
-    { value: 'bank', label: 'bank' }
+    { value: 'cash', label: 'Cash' },
+    { value: 'bank', label: 'Bank' }
 ]
 
 const paymentStatusObj = [
-    { value: 'active', label: 'active' },
-    { value: 'complete', label: 'complete' },
-    { value: 'cancelled', label: 'cancelled' }
+    { value: 'active', label: 'Active' },
+    { value: 'complete', label: 'Complete' },
+    { value: 'cancelled', label: 'Cancelled' }
 ]
 
-const agentNameObj = [
-    { value: 'agent1', label: 'Agent 1' },
-    { value: 'agent2', label: 'Agent 2' },
-]
-
-const insurdNameObj = [
-    { value: 'insurd1', label: 'Insurd 1' },
-    { value: 'insurd2', label: 'Insurd 2' },
-]
 
 export default function AddPolicy() {
-    const [company, setCompany] = useState("")
-    const [payment, setPayment] = useState("")
-    const [paymentStatus, setPaymentStatus] = useState("")
-    const [agentName, setAgentName] = useState("")
-    const [insuredName, setInsuredName] = useState("")
-    const [date, setDate] = useState("")
-    const [policyNumber, setPolicyNumber] = useState("")
-    const [carModel, setCarModel] = useState("")
-    const [engineType, setEngineType] = useState("")
-    const [grossPrice, setGrossPrice] = useState("")
-    const [newCoRates, setNewCoRates] = useState("")
-    const [clientPrice, setClientPrice] = useState("")
-    const [profit, setProfit] = useState("")
-    const [remarks, setRemarks] = useState("")
-    const [referenceNumber, setReferenceNumber] = useState("")
+    // --- State for form inputs ---
+    // For foreign keys, we will store the ID. Initialize with null.
+    const [company, setCompany] = useState(null);
+    const [agentName, setAgentName] = useState(null);
+    const [insuredName, setInsuredName] = useState(null);
 
-    const [insuranceCompanies, setInsuranceCompanies] = useState(initialInsuranceCompanyObj);
+    // State for direct fields
+    const [date, setDate] = useState("");
+    const [policyNumber, setPolicyNumber] = useState("");
+    const [carModel, setCarModel] = useState("");
+    const [engineType, setEngineType] = useState("");
+    const [grossPrice, setGrossPrice] = useState("");
+    const [newCoRates, setNewCoRates] = useState("");
+    const [clientPrice, setClientPrice] = useState("");
+    const [profit, setProfit] = useState("");
+    const [remarks, setRemarks] = useState("");
+    const [referenceNumber, setReferenceNumber] = useState("");
+    const [payment, setPayment] = useState("");
+    const [paymentStatus, setPaymentStatus] = useState("");
 
+    // --- State for options fetched from backend ---
+    const [insuranceCompanies, setInsuranceCompanies] = useState([]);
+    const [agents, setAgents] = useState([]);
+    const [clients, setClients] = useState([]); // For "Insured Name"
+
+    // --- Fetch data from backend on component mount ---
+    useEffect(() => {
+        // Helper function to fetch and format data for the Combobox
+        const fetchData = (url, setter) => {
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    const formattedData = data.map(item => ({ value: item.id, label: item.name }));
+                    setter(formattedData);
+                })
+                .catch(error => console.error(`Failed to fetch data from ${url}:`, error));
+        };
+
+        // Replace with your actual API endpoints
+        fetchData('/api/insurance-companies/', setInsuranceCompanies);
+        fetchData('/api/agents/', setAgents);
+        fetchData('/api/clients/', setClients);
+    }, []);
+
+    // --- Effect for calculating profit ---
     useEffect(() => {
         const calculatedProfit = (parseFloat(clientPrice || '0') - parseFloat(newCoRates || '0')).toFixed(2);
         setProfit(calculatedProfit);
     }, [clientPrice, newCoRates]);
 
+    // --- Handle form submission ---
     const handleSave = () => {
+        // Construct the payload with keys matching the Django model fields
         const policyData = {
-            date,
-            company,
-            policyNumber,
-            insuredName,
-            carModel,
-            engineType,
-            agentName,
-            grossPrice,
-            newCoRates,
-            clientPrice,
-            profit,
-            payment,
-            paymentStatus,
-            remarks,
-            referenceNumber,
+            issue_date: date,
+            insurance_company: company, // Send the ID
+            policy_number: policyNumber,
+            client: insuredName, // Send the ID
+            car_model: carModel,
+            engine_type: engineType,
+            agent: agentName, // Send the ID
+            gross_price: grossPrice,
+            co_rate: newCoRates,
+            client_price: clientPrice,
+            payment_method: payment,
+            payment_status: paymentStatus,
+            remarks: remarks,
+            reference_number: referenceNumber,
         };
-        console.log(policyData);
+
+        console.log("Sending data to backend:", policyData);
+
+        // Send the data to your backend API
+        fetch('/api/policies/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Make sure to include your authentication token
+                // 'Authorization': `Bearer ${yourAuthToken}`
+            },
+            body: JSON.stringify(policyData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Policy created successfully!', data);
+            // Optionally, redirect or show a success message
+        })
+        .catch(error => {
+            console.error('Failed to create policy:', error);
+            // Show an error message to the user
+        });
     };
 
-    const handleSaveNewCompany = (newCompanyName: string) => {
-        const newValue = newCompanyName.toLowerCase().replace(/\s+/g, '');
-        const newLabel = newCompanyName;
-        setInsuranceCompanies(prev => [...prev, { value: newValue, label: newLabel }]);
-        setCompany(newValue); // Optionally select the newly added company
+    // --- Handle creating a new entity (e.g., Insurance Company) ---
+    const handleSaveNewCompany = (newCompanyName) => {
+        fetch('/api/insurance-companies/', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${yourAuthToken}`
+            },
+            body: JSON.stringify({ name: newCompanyName })
+        })
+        .then(res => res.json())
+        .then(newCompany => {
+            // Add the new company to the dropdown list and select it
+            const newOption = { value: newCompany.id, label: newCompany.name };
+            setInsuranceCompanies(prev => [...prev, newOption]);
+            setCompany(newCompany.id);
+        })
+        .catch(error => console.error('Failed to create new company:', error));
     };
 
     return (
@@ -115,7 +168,7 @@ export default function AddPolicy() {
                                     onChange={setCompany}
                                     placeholder="Select company..."
                                     searchPlaceholder="Search company..."
-                                    noResultsMessage="No company found."/>
+                                    noResultsMessage="No company found." />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Policy Number</label>
@@ -124,12 +177,12 @@ export default function AddPolicy() {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Insured Name</label>
                                 <Combobox
-                                    items={insurdNameObj}
+                                    items={clients} // Use clients fetched from backend
                                     value={insuredName}
                                     onChange={setInsuredName}
                                     placeholder="Select insured..."
                                     searchPlaceholder="Search insured..."
-                                    noResultsMessage="No insured found."/>
+                                    noResultsMessage="No insured found." />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Car Model</label>
@@ -142,12 +195,12 @@ export default function AddPolicy() {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Agent Name</label>
                                 <Combobox
-                                    items={agentNameObj}
+                                    items={agents} // Use agents fetched from backend
                                     value={agentName}
                                     onChange={setAgentName}
                                     placeholder="Select Agent..."
                                     searchPlaceholder="Search Agent..."
-                                    noResultsMessage="No Agent found."/>
+                                    noResultsMessage="No Agent found." />
                             </div>
                         </div>
                     </div>
@@ -172,7 +225,7 @@ export default function AddPolicy() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Profit</label>
                                 <Input type="text" value={profit} readOnly />
                             </div>
-                            
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
                                 <Combobox
@@ -181,7 +234,7 @@ export default function AddPolicy() {
                                     onChange={setPayment}
                                     placeholder="Select Method..."
                                     searchPlaceholder="Search Method"
-                                    noResultsMessage="No Method found."/>
+                                    noResultsMessage="No Method found." />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Payment Status</label>
@@ -191,7 +244,7 @@ export default function AddPolicy() {
                                     onChange={setPaymentStatus}
                                     placeholder="Select Status..."
                                     searchPlaceholder="Search Status"
-                                    noResultsMessage="No Status found."/>
+                                    noResultsMessage="No Status found." />
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Remarks</label>
