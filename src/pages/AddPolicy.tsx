@@ -6,7 +6,7 @@ import { AddNewEntityDialog } from "@/components/add-new-entity-dialog"
 
 // The hardcoded data objects are removed, as we will fetch from the backend.
 const baseURL = "http://127.0.0.1:8000/"
-const yourAuthToken = ''
+// const yourAuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODA5MDc2LCJpYXQiOjE3NTU3MjI2NzYsImp0aSI6ImQwNjljNDNlNzkwZTRjMWZiNmI4YThjYzhmZTVkOTAwIiwidXNlcl9pZCI6MX0.1o4ypV_CW9nnfMSitYoGmF9nzwouvvDVeRHVWFdOc7w"
 
 const paymentMethodObj = [
     { value: 'cash', label: 'Cash' },
@@ -32,12 +32,12 @@ export default function AddPolicy() {
     const [policyNumber, setPolicyNumber] = useState("");
     const [carModel, setCarModel] = useState("");
     const [engineType, setEngineType] = useState("");
-    const [grossPrice, setGrossPrice] = useState("");
-    const [newCoRates, setNewCoRates] = useState("");
-    const [clientPrice, setClientPrice] = useState("");
+    const [grossPrice, setGrossPrice] = useState<number>(0);
+    const [newCoRates, setNewCoRates] = useState<number>(0);
+    const [clientPrice, setClientPrice] = useState<number>(0);
     const [profit, setProfit] = useState("");
     const [remarks, setRemarks] = useState("");
-    const [referenceNumber, setReferenceNumber] = useState("");
+    const [referenceNumber, setReferenceNumber] = useState<number>(0);
     const [payment, setPayment] = useState("");
     const [paymentStatus, setPaymentStatus] = useState("");
 
@@ -67,7 +67,7 @@ export default function AddPolicy() {
 
     // --- Effect for calculating profit ---
     useEffect(() => {
-        const calculatedProfit = (parseFloat(clientPrice || '0') - parseFloat(newCoRates || '0')).toFixed(2);
+        const calculatedProfit = (clientPrice - newCoRates).toFixed(2);
         setProfit(calculatedProfit);
     }, [clientPrice, newCoRates]);
 
@@ -93,50 +93,51 @@ export default function AddPolicy() {
 
         console.log("Sending data to backend:", policyData);
 
-        // // Send the data to your backend API
-        // fetch(`${baseURL}/policy/`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         // Make sure to include your authentication token
-        //         'Authorization': `Bearer ${yourAuthToken}`
-        //     },
-        //     body: JSON.stringify(policyData)
-        // })
-        // .then(response => {
-        //     if (!response.ok) {
-        //         return response.json().then(err => { throw err; });
-        //     }
-        //     return response.json();
-        // })
-        // .then(data => {
-        //     console.log('Policy created successfully!', data);
-        //     // Optionally, redirect or show a success message
-        // })
-        // .catch(error => {
-        //     console.error('Failed to create policy:', error);
-        //     // Show an error message to the user
-        // });
+        // Send the data to your backend API
+        fetch(`${baseURL}/policy/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Make sure to include your authentication token
+                // 'Authorization': `Bearer ${yourAuthToken}`
+            },
+            body: JSON.stringify(policyData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Policy created successfully!', data);
+            // Optionally, redirect or show a success message
+        })
+        .catch(error => {
+            console.error('Failed to create policy:', error);
+            // Show an error message to the user
+        });
     };
 
     // --- Handle creating a new entity (e.g., Insurance Company) ---
     const handleSaveNewCompany = (newCompanyName) => {
-        fetch(`${baseURL}/insurance-company/`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${yourAuthToken}`
-            },
-            body: JSON.stringify({ name: newCompanyName })
-        })
-        .then(res => res.json())
-        .then(newCompany => {
-            // Add the new company to the dropdown list and select it
-            const newOption = { value: newCompany.id, label: newCompany.name };
-            setInsuranceCompanies(prev => [...prev, newOption]);
-            setCompany(newCompany.id);
-        })
-        .catch(error => console.error('Failed to create new company:', error));
+        console.log('New company name:', newCompanyName)
+        // fetch(`${baseURL}/insurance-company/`, {
+        //     method: 'POST',
+        //     headers: { 
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer ${yourAuthToken}`
+        //     },
+        //     body: JSON.stringify({ name: newCompanyName })
+        // })
+        // .then(res => res.json())
+        // .then(newCompany => {
+        //     // Add the new company to the dropdown list and select it
+        //     const newOption = { value: newCompany.id, label: newCompany.name };
+        //     setInsuranceCompanies(prev => [...prev, newOption]);
+        //     setCompany(newCompany.id);
+        // })
+        // .catch(error => console.error('Failed to create new company:', error));
     };
 
     return (
@@ -213,15 +214,15 @@ export default function AddPolicy() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Gross/Price</label>
-                                <Input type="text" value={grossPrice} onChange={(e) => setGrossPrice(e.target.value)} />
+                                <Input type="number" value={grossPrice} onChange={(e) => setGrossPrice(parseFloat(e.target.value) || 0)} />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">New CO Rates</label>
-                                <Input type="text" value={newCoRates} onChange={(e) => setNewCoRates(e.target.value)} />
+                                <Input type="number" value={newCoRates} onChange={(e) => setNewCoRates(parseFloat(e.target.value) || 0)} />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Client Price</label>
-                                <Input type="text" value={clientPrice} onChange={(e) => setClientPrice(e.target.value)} />
+                                <Input type="number" value={clientPrice} onChange={(e) => setClientPrice(parseFloat(e.target.value) || 0)} />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Profit</label>
@@ -254,7 +255,7 @@ export default function AddPolicy() {
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Reference Number</label>
-                                <Input type="text" value={referenceNumber} onChange={(e) => setReferenceNumber(e.target.value)} />
+                                <Input type="number" value={referenceNumber} onChange={(e) => setReferenceNumber(parseInt(e.target.value, 10) || 0)} />
                             </div>
                         </div>
                     </div>
