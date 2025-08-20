@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { AddNewEntityDialog } from "@/components/add-new-entity-dialog"
 
 // The hardcoded data objects are removed, as we will fetch from the backend.
+const baseURL = "http://127.0.0.1:8000/"
+const yourAuthToken = ''
 
 const paymentMethodObj = [
     { value: 'cash', label: 'Cash' },
@@ -58,9 +60,9 @@ export default function AddPolicy() {
         };
 
         // Replace with your actual API endpoints
-        fetchData('/api/insurance-companies/', setInsuranceCompanies);
-        fetchData('/api/agents/', setAgents);
-        fetchData('/api/clients/', setClients);
+        fetchData(`${baseURL}/insurance-company/`, setInsuranceCompanies);
+        fetchData(`${baseURL}/agent/`, setAgents);
+        fetchData(`${baseURL}/client/`, setClients);
     }, []);
 
     // --- Effect for calculating profit ---
@@ -91,39 +93,39 @@ export default function AddPolicy() {
 
         console.log("Sending data to backend:", policyData);
 
-        // Send the data to your backend API
-        fetch('/api/policies/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // Make sure to include your authentication token
-                // 'Authorization': `Bearer ${yourAuthToken}`
-            },
-            body: JSON.stringify(policyData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw err; });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Policy created successfully!', data);
-            // Optionally, redirect or show a success message
-        })
-        .catch(error => {
-            console.error('Failed to create policy:', error);
-            // Show an error message to the user
-        });
+        // // Send the data to your backend API
+        // fetch(`${baseURL}/policy/`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         // Make sure to include your authentication token
+        //         'Authorization': `Bearer ${yourAuthToken}`
+        //     },
+        //     body: JSON.stringify(policyData)
+        // })
+        // .then(response => {
+        //     if (!response.ok) {
+        //         return response.json().then(err => { throw err; });
+        //     }
+        //     return response.json();
+        // })
+        // .then(data => {
+        //     console.log('Policy created successfully!', data);
+        //     // Optionally, redirect or show a success message
+        // })
+        // .catch(error => {
+        //     console.error('Failed to create policy:', error);
+        //     // Show an error message to the user
+        // });
     };
 
     // --- Handle creating a new entity (e.g., Insurance Company) ---
     const handleSaveNewCompany = (newCompanyName) => {
-        fetch('/api/insurance-companies/', {
+        fetch(`${baseURL}/insurance-company/`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${yourAuthToken}`
+                'Authorization': `Bearer ${yourAuthToken}`
             },
             body: JSON.stringify({ name: newCompanyName })
         })
