@@ -61,9 +61,9 @@ export default function AddPolicy() {
         };
 
         // Replace with your actual API endpoints
-        fetchData(`${baseURL}/insurance-company/`, setInsuranceCompanies);
-        fetchData(`${baseURL}/agent/`, setAgents);
-        fetchData(`${baseURL}/client/`, setClients);
+        fetchData(`${baseURL}insurance-company/`, setInsuranceCompanies);
+        fetchData(`${baseURL}agent/`, setAgents);
+        fetchData(`${baseURL}client/`, setClients);
     }, []);
 
     // --- Effect for calculating profit ---
@@ -95,7 +95,7 @@ export default function AddPolicy() {
         console.log("Sending data to backend:", policyData);
 
         // Send the data to your backend API
-        fetch(`${baseURL}/policy/`, {
+        fetch(`${baseURL}policy/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
