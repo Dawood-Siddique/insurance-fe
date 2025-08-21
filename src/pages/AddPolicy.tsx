@@ -54,6 +54,7 @@ export default function AddPolicy() {
                 .then(res => res.json())
                 .then(data => {
                     const formattedData = data.map(item => ({ value: item.id, label: item.name }));
+                    // const formattedData = data.map(item => ({ value: item.name, label: item.id }));
                     setter(formattedData);
                 })
                 .catch(error => console.error(`Failed to fetch data from ${url}:`, error));
@@ -122,6 +123,8 @@ export default function AddPolicy() {
     // --- Handle creating a new entity (e.g., Insurance Company) ---
     const handleSaveNewCompany = (newCompanyName) => {
         console.log('New company name:', newCompanyName)
+        console.log('insurance_company',company)
+        console.log('insurance companies', insuranceCompanies)
         // fetch(`${baseURL}/insurance-company/`, {
         //     method: 'POST',
         //     headers: { 
