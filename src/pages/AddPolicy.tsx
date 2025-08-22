@@ -3,6 +3,7 @@ import { Combobox } from "@/components/ui/combobox"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { AddNewEntityDialog } from "@/components/add-new-entity-dialog"
+import axios from "axios";
 
 // The hardcoded data objects are removed, as we will fetch from the backend.
 const baseURL = "http://127.0.0.1:8000/"
@@ -32,9 +33,9 @@ export default function AddPolicy() {
     const [policyNumber, setPolicyNumber] = useState("");
     const [carModel, setCarModel] = useState("");
     const [engineType, setEngineType] = useState("");
-    const [grossPrice, setGrossPrice] = useState<number>(0);
-    const [newCoRates, setNewCoRates] = useState<number>(0);
-    const [clientPrice, setClientPrice] = useState<number>(0);
+    const [grossPrice, setGrossPrice] = useState<number>();
+    const [newCoRates, setNewCoRates] = useState<number>();
+    const [clientPrice, setClientPrice] = useState<number>();
     const [profit, setProfit] = useState("");
     const [remarks, setRemarks] = useState("");
     const [referenceNumber, setReferenceNumber] = useState<number>(0);
@@ -49,11 +50,10 @@ export default function AddPolicy() {
     // --- Fetch data from backend on component mount ---
     useEffect(() => {
         // Helper function to fetch and format data for the Combobox
-        const fetchData = (url, setter) => {
-            fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    const formattedData = data.map(item => ({ value: item.id, label: item.name }));
+        const fetchData = (url: string, setter) => {
+            axios.get(url)
+                .then(res => {
+                    const formattedData = res.data.map(item => ({ value: item.id, label: item.name }));
                     // const formattedData = data.map(item => ({ value: item.name, label: item.id }));
                     setter(formattedData);
                 })
@@ -95,54 +95,75 @@ export default function AddPolicy() {
         console.log("Sending data to backend:", policyData);
 
         // Send the data to your backend API
-        fetch(`${baseURL}policy/`, {
-            method: 'POST',
+        axios.post(`${baseURL}policy/`, policyData, {
             headers: {
                 'Content-Type': 'application/json',
                 // Make sure to include your authentication token
                 // 'Authorization': `Bearer ${yourAuthToken}`
-            },
-            body: JSON.stringify(policyData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw err; });
             }
-            return response.json();
         })
-        .then(data => {
-            console.log('Policy created successfully!', data);
-            // Optionally, redirect or show a success message
-        })
-        .catch(error => {
-            console.error('Failed to create policy:', error);
-            // Show an error message to the user
-        });
+            .then(response => {
+                console.log('Policy created successfully!', response.data);
+                // Optionally, redirect or show a success message
+            })
+            .catch(error => {
+                console.error('Failed to create policy:', error.response ? error.response.data : error);
+                // Show an error message to the user
+            });
     };
 
     // --- Handle creating a new entity (e.g., Insurance Company) ---
     const handleSaveNewCompany = (newCompanyName) => {
-        console.log('New company name:', newCompanyName)
-        console.log('insurance_company',company)
-        console.log('insurance companies', insuranceCompanies)
-        // fetch(`${baseURL}/insurance-company/`, {
-        //     method: 'POST',
-        //     headers: { 
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${yourAuthToken}`
-        //     },
-        //     body: JSON.stringify({ name: newCompanyName })
-        // })
-        // .then(res => res.json())
-        // .then(newCompany => {
-        //     // Add the new company to the dropdown list and select it
-        //     const newOption = { value: newCompany.id, label: newCompany.name };
-        //     setInsuranceCompanies(prev => [...prev, newOption]);
-        //     setCompany(newCompany.id);
-        // })
-        // .catch(error => console.error('Failed to create new company:', error));
+        axios.post(`${baseURL}insurance-company/`, { name: newCompanyName }, {
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${yourAuthToken}`
+            }
+        })
+            .then(res => {
+                const newCompany = res.data;
+                // Add the new company to the dropdown list and select it
+                const newOption = { value: newCompany.id, label: newCompany.name };
+                setInsuranceCompanies(prev => [...prev, newOption]);
+                setCompany(newCompany.id);
+            })
+            .catch(error => console.error('Failed to create new company:', error.response ? error.response.data : error));
     };
 
+    const handleSaveNewAgent = (newAgentName) => {
+        axios.post(`${baseURL}agent/`, { name: newAgentName }, {
+            headers: {
+                'Content-Type': 'application/json',
+
+            }
+        })
+            .then(res => {
+                const newAgent = res.data;
+                // Add the new agent to the dropdown list and select it
+                const newOption = { value: newAgent.id, label: newAgent.name };
+                setAgents(prev => [...prev, newOption]);
+                setAgentName(newAgent.id);
+            })
+            .catch(error => console.error('Failed to create new agent:', error.response ? error.response.data : error));
+
+    }
+
+    const handleSaveNewClient = (newClientName) => {
+        axios.post(`${baseURL}client/`, { name: newClientName }, {
+            headers: {
+                'Content-Type': 'application/json',
+
+            }
+        })
+            .then(res => {
+                const newClient = res.data;
+                // Add the new client to the dropdown list
+                const newOption = { value: newClient.id, label: newClient.name };
+                setClients(prev => [...prev, newOption]);
+                setInsuredName(newClient.id);
+            })
+            .catch(error => console.error('Failed to create new agent:', error.response ? error.response.data : error));
+    }
     return (
         <div className="container mx-auto p-4">
             <div className="max-w-4xl mx-auto">
@@ -177,11 +198,20 @@ export default function AddPolicy() {
                                     noResultsMessage="No company found." />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Policy Number</label>
-                                <Input type="text" value={policyNumber} onChange={(e) => setPolicyNumber(e.target.value)} />
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Car Model</label>
+                                <Input type="text" value={carModel} onChange={(e) => setCarModel(e.target.value)} />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Insured Name</label>
+                                <div className="inline-flex items-center gap-2 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Insured Name</label>
+                                    <AddNewEntityDialog
+                                        dialogTitle="Add New Insured"
+                                        dialogDescription="Enter the name of the new insured."
+                                        inputLabel="Insured Name"
+                                        triggerText="Add New Insured?"
+                                        onSave={handleSaveNewClient}
+                                    />
+                                </div>
                                 <Combobox
                                     items={clients} // Use clients fetched from backend
                                     value={insuredName}
@@ -191,15 +221,20 @@ export default function AddPolicy() {
                                     noResultsMessage="No insured found." />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Car Model</label>
-                                <Input type="text" value={carModel} onChange={(e) => setCarModel(e.target.value)} />
-                            </div>
-                            <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Engine Type</label>
                                 <Input type="text" value={engineType} onChange={(e) => setEngineType(e.target.value)} />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Agent Name</label>
+                                <div className="inline-flex items-center gap-2 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Agent Name</label>
+                                    <AddNewEntityDialog
+                                        dialogTitle="Add New Agent"
+                                        dialogDescription="Enter the name of the new agent."
+                                        inputLabel="Agent Name"
+                                        triggerText="Add New Agent?"
+                                        onSave={handleSaveNewAgent}
+                                    />
+                                </div>
                                 <Combobox
                                     items={agents} // Use agents fetched from backend
                                     value={agentName}
@@ -207,6 +242,10 @@ export default function AddPolicy() {
                                     placeholder="Select Agent..."
                                     searchPlaceholder="Search Agent..."
                                     noResultsMessage="No Agent found." />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Policy Number</label>
+                                <Input type="text" value={policyNumber} onChange={(e) => setPolicyNumber(e.target.value)} />
                             </div>
                         </div>
                     </div>
