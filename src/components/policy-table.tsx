@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Policy } from '@/types';
+import { Policy } from '@/types';
 
 export function PolicyTable({ policies }: { policies: Policy[] }) {
 
