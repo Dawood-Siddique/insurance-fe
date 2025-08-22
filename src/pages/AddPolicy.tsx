@@ -179,7 +179,7 @@ export default function AddPolicy() {
                                 <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                             </div>
                             <div>
-                                <div className="inline-flex items-center gap-2 mb-1">
+                                <div className="flex flex-wrap items-center gap-2 mb-1">
                                     <label className="block text-sm font-medium text-gray-700">Insurance Company</label>
                                     <AddNewEntityDialog
                                         dialogTitle="Add New Insurance Company"
@@ -202,7 +202,7 @@ export default function AddPolicy() {
                                 <Input type="text" value={carModel} onChange={(e) => setCarModel(e.target.value)} />
                             </div>
                             <div>
-                                <div className="inline-flex items-center gap-2 mb-1">
+                                <div className="flex flex-wrap items-center gap-2 mb-1">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Insured Name</label>
                                     <AddNewEntityDialog
                                         dialogTitle="Add New Insured"
@@ -225,7 +225,7 @@ export default function AddPolicy() {
                                 <Input type="text" value={engineType} onChange={(e) => setEngineType(e.target.value)} />
                             </div>
                             <div>
-                                <div className="inline-flex items-center gap-2 mb-1">
+                                <div className="flex flex-wrap items-center gap-2 mb-1">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Agent Name</label>
                                     <AddNewEntityDialog
                                         dialogTitle="Add New Agent"
