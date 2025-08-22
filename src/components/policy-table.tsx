@@ -17,13 +17,17 @@ export function PolicyTable({ policies }) {
           <TableHeader>
             <TableRow>
               <TableHead>Issue Date</TableHead>
+              <TableHead>Insurance Company</TableHead>
               <TableHead>Insured Name</TableHead>
               <TableHead>Policy Number</TableHead>
               <TableHead>Car Model</TableHead>
+              <TableHead>Engine Type</TableHead>
               <TableHead>Agent Name</TableHead>
               <TableHead>Gross Price</TableHead>
+              <TableHead>CO Rate</TableHead>
               <TableHead>Client Price</TableHead>
-              <TableHead>Profit</TableHead>
+              <TableHead>Expected Profit</TableHead>
+              <TableHead>Current P/L</TableHead>
               <TableHead>Payment Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -31,13 +35,17 @@ export function PolicyTable({ policies }) {
             {policies.map((policy) => (
               <TableRow key={policy.id}>
                 <TableCell>{policy.issue_date}</TableCell>
-                <TableCell>{policy.client_name}</TableCell>
+                <TableCell>{policy.insurance_company}</TableCell>
+                <TableCell>{policy.client}</TableCell>
                 <TableCell>{policy.policy_number}</TableCell>
                 <TableCell>{policy.car_model}</TableCell>
-                <TableCell>{policy.agent_name}</TableCell>
+                <TableCell>{policy.agent}</TableCell>
+                <TableCell>{policy.engine_type}</TableCell>
                 <TableCell>{policy.gross_price}</TableCell>
+                <TableCell>{policy.co_rate}</TableCell>
                 <TableCell>{policy.client_price}</TableCell>
-                <TableCell>{policy.profit}</TableCell>
+                <TableCell>{ policy.client_price - policy.co_rate }</TableCell>
+                <TableCell>{0}</TableCell>
                 <TableCell>{policy.payment_status}</TableCell>
               </TableRow>
             ))}
