@@ -39,6 +39,16 @@ export default function Dashboard() {
     }));
   };
 
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedAgent('');
+    setSelectedClient('');
+    setDateRange({ start: '', end: '' });
+    setSelectedInsuranceCompany('');
+    setSelectedPaymentStatus('');
+  };
+
   // Fetch policies
   useEffect(() => {
     axios.get(`${baseURL}policy/`).then((res) => {
@@ -124,7 +134,10 @@ export default function Dashboard() {
       <div className="flex flex-col items-center ml-20 mr-20 min-h-screen">
         <div className="flex justify-between w-full p-4">
           <div className="text-4xl font-bold">Policies</div>
-          <div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={clearFilters}>
+              Clear Filters
+            </Button>
             <Button>
               <Link to="/add-policy">Add Policy</Link>
             </Button>
