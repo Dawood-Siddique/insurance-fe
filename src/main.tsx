@@ -16,7 +16,7 @@ const router = createBrowserRouter([
   {path:'/report', element:<Report/>},
   {path:'/policies', element:<Policies/>},
   {path:'/', element:<Navigate to="/dashboard" />},
-  {path:'/login', element:<Login/>},
+  // {path:'/login', element:<Login/>},
   {path:'/add-policy', element:<AddPolicy/>},
   {path:'/add-transaction/:policyId', element:<AddTransaction/>}
 ])
