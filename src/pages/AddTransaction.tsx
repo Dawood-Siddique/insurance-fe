@@ -4,15 +4,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import axios from "axios";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const baseURL = "http://127.0.0.1:8000/"
 const Types = [
-    {value: "cancelled", label: "cancelled"},
-    {value: "payment", label: "payment"},
-    {value: "credit-adjustment", label: "credit-adjustment"},
-    {value: "payback", label: "payback"}
+    { value: "cancelled", label: "cancelled" },
+    { value: "payment", label: "payment" },
+    { value: "credit-adjustment", label: "credit-adjustment" },
+    { value: "payback", label: "payback" }
 ]
+
 
 export default function AddTransaction() {
     const { policyId } = useParams<{ policyId: string }>();
@@ -21,6 +23,33 @@ export default function AddTransaction() {
     const [amount, setAmount] = useState<number | null>(null);
     const [description, setDescription] = useState("");
 
+    const handleSave = () => {
+        const transactionData = {
+            policy: policyId,
+            date: date,
+            type: type,
+            amount: amount,
+            description: description,
+        };
+        console.log("Sending data to backend:", transactionData);
+
+        // Send the data to your backend API
+        axios.post(`${baseURL}ledger/`, transactionData, {
+            headers: {
+                'Content-Type': 'application/json',
+                // Make sure to include your authentication token
+                // 'Authorization': `Bearer ${yourAuthToken}`
+            }
+        })
+            .then(response => {
+                console.log('Transaction created successfully!', response.data);
+                // Optionally, redirect or show a success message
+            })
+            .catch(error => {
+                console.error('Failed to create transaction:', error.response ? error.response.data : error);
+                // Show an error message to the user
+            });
+    }
 
     return (
         <div>
@@ -63,7 +92,7 @@ export default function AddTransaction() {
                 </div>
                 <div className="mt-8 flex justify-end space-x-4">
                     <Button variant={"outline"} >Cancel</Button>
-                    <Button >Save</Button>
+                    <Button onClick={handleSave}>Save</Button>
                 </div>
             </div>
         </div>
