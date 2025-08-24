@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -16,12 +16,26 @@ const Types = [
 ]
 
 
+
 export default function AddTransaction() {
     const { policyId } = useParams<{ policyId: string }>();
     const [date, setDate] = useState("");
     const [type, setType] = useState("");
     const [amount, setAmount] = useState<number | null>(null);
     const [description, setDescription] = useState("");
+    const [beneficiaryBalance, setBeneficiaryBalance] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (policyId) {
+            axios.get(`${baseURL}total-balance/?agent_id=${policyId}`)
+                .then(response => {
+                    setBeneficiaryBalance(response.data.total_balance);
+                })
+                .catch(error => {
+                    console.error('Failed to fetch beneficiary balance:', error.response ? error.response.data : error);
+                });
+        }
+    }, [policyId]);
 
     const handleSave = () => {
         const transactionData = {
@@ -33,7 +47,6 @@ export default function AddTransaction() {
         };
         console.log("Sending data to backend:", transactionData);
 
-        // Send the data to your backend API
         axios.post(`${baseURL}ledger/`, transactionData, {
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +68,6 @@ export default function AddTransaction() {
         <div>
             <Header />
             <div className="flex flex-col ml-20 mr-20 ">
-                <h1 className="text-3xl">Add Transaction for Policy ID: {policyId}</h1>
                 <div className="text-2xl font-bold">Add New Transaction</div>
                 <div className="mt-8 space-y-2">
                     <Label htmlFor="date">Date</Label>
@@ -84,7 +96,7 @@ export default function AddTransaction() {
                     <Input id="amount" type="number" value={amount || ''} onChange={(e) => setAmount(parseFloat(e.target.value))} />
                 </div>
                 <div className="mt-5 text-xl font-bold">
-                    Current Beneficiary Balance: 5000
+                    Current Beneficiary Balance: {beneficiaryBalance !== null ? beneficiaryBalance : 'Loading...'}
                 </div>
                 <div className="mt-5 space-y-2">
                     <Label htmlFor="description">Description</Label>

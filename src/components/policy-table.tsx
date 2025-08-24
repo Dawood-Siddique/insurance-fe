@@ -43,8 +43,8 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
                 <TableCell>{policy.client}</TableCell>
                 <TableCell>{policy.policy_number}</TableCell>
                 <TableCell>{policy.car_model}</TableCell>
-                <TableCell>{policy.agent}</TableCell>
                 <TableCell>{policy.engine_type}</TableCell>
+                <TableCell>{policy.agent}</TableCell>
                 <TableCell>{policy.gross_price}</TableCell>
                 <TableCell>{policy.co_rate}</TableCell>
                 <TableCell>{policy.client_price}</TableCell>
