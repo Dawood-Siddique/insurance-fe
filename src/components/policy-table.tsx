@@ -8,6 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Policy } from '@/types';
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export function PolicyTable({ policies }: { policies: Policy[] }) {
 
@@ -30,6 +32,7 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
               <TableHead>Expected Profit</TableHead>
               <TableHead>Current P/L</TableHead>
               <TableHead>Payment Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -48,6 +51,11 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
                 <TableCell>{ policy.client_price - policy.co_rate }</TableCell>
                 <TableCell>{0}</TableCell>
                 <TableCell>{policy.payment_status}</TableCell>
+                <TableCell>
+                  <Button asChild>
+                    <Link to={`/add-transaction/${policy.id}`}>Add Transaction</Link>
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
