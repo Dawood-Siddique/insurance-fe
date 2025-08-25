@@ -1,14 +1,22 @@
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { TransactionTable } from "@/components/transaction-table"
+import { type Transaction } from "@/types";
 
 
 export default function PolicyDetail() {
 
+    const tx5: Transaction[] = [{
+        id: 5,
+        amount: -20,
+        date: "2025-08-12",
+        type: "debit",
+        description: "Coffee shop",
+    }];
     return (
         <div>
             <Header />
-            <div className="flex flex-col ml-20 mr-20 mt-10 bg-amber-100">
+            <div className="flex flex-col ml-20 mr-20 mt-10 ">
                 <div className="flex flex-row justify-between ">
                     <div className="text-2xl font-bold">Policy Detail</div>
                     <Button variant={"outline"}>Edit</Button>
@@ -43,7 +51,7 @@ export default function PolicyDetail() {
                             <div>ABC Insurance</div>
                         </div>
                     </div>
-                    
+
 
                     <div className="flex flex-row justify-between">
                         <div>
@@ -55,7 +63,7 @@ export default function PolicyDetail() {
                             <div>200</div>
                         </div>
                     </div>
-                    
+
 
                     <div className="flex flex-row justify-between">
                         <div>
@@ -67,12 +75,14 @@ export default function PolicyDetail() {
                             <div>Cancelled</div>
                         </div>
                     </div>
-                
+
                     {/* Transaction history table */}
 
-                    <div>Transaction History</div>
-                    <TransactionTable />
+                    <div className="mt-10 font-bold">Transaction History</div>
+                    <TransactionTable transactions={tx5} />
 
+                    <div className="mt-10 font-bold">Profit/Loss 100</div>
+                    <Button variant={"destructive"}>Delete Policy</Button>
                 </div>
             </div>
         </div>
