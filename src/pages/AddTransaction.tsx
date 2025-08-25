@@ -27,7 +27,7 @@ export default function AddTransaction() {
 
     useEffect(() => {
         if (policyId) {
-            axios.get(`${baseURL}total-balance/?agent_id=${policyId}`)
+            axios.get(`${baseURL}total-balance/?policy_id=${policyId}`)
                 .then(response => {
                     setBeneficiaryBalance(response.data.total_balance);
                 })
