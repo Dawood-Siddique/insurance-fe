@@ -8,6 +8,7 @@ import Policies from './pages/Policies.tsx'
 import Login from './pages/Login.tsx'
 import AddPolicy from './pages/AddPolicy.tsx'
 import AddTransaction from './pages/AddTransaction.tsx'
+import PolicyDetail from './pages/PolicyDetail.tsx'
 
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 
@@ -18,7 +19,8 @@ const router = createBrowserRouter([
   {path:'/', element:<Navigate to="/dashboard" />},
   // {path:'/login', element:<Login/>},
   {path:'/add-policy', element:<AddPolicy/>},
-  {path:'/add-transaction/:policyId', element:<AddTransaction/>}
+  {path:'/add-transaction/:policyId', element:<AddTransaction/>},
+  {path:'/policy-detail/:policyId', element:<PolicyDetail/>},
 ])
 
 createRoot(document.getElementById('root')!).render(
