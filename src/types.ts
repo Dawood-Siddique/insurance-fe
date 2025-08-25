@@ -13,6 +13,15 @@ export interface Policy {
   payment_status: 'active' | 'complete' | 'cancelled';
 }
 
+export interface Transaction {
+  id: number;
+  amount: number;
+  date: string;
+  type: string;
+  description: string;
+}
+
+
 export interface Agent {
   id: number;
   name: string;

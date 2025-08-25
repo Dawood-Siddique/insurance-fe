@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Policy } from '@/types';
+import { type Policy } from '@/types';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 

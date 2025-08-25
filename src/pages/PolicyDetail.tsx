@@ -1,7 +1,10 @@
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
+import { TransactionTable } from "@/components/transaction-table"
+
 
 export default function PolicyDetail() {
+
     return (
         <div>
             <Header />
@@ -68,7 +71,8 @@ export default function PolicyDetail() {
                     {/* Transaction history table */}
 
                     <div>Transaction History</div>
-                    
+                    <TransactionTable />
+
                 </div>
             </div>
         </div>
