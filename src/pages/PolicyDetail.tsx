@@ -13,6 +13,9 @@ const baseURL = "http://127.0.0.1:8000/"
 export default function PolicyDetail() {
     const policyId = useParams<{ policyId: string }>().policyId;
     const [policyDetails, setPolicyDetails] = useState<any>(null);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [proftLoss, setProfitLoss] = useState<number | null>(null);
+
 
 
     useEffect(() => {
@@ -22,6 +25,12 @@ export default function PolicyDetail() {
             .then(
                 (response) => {
                     setPolicyDetails(response.data);
+                    setTransactions(response.data.transactions || []);
+                    
+                    // profitLoss is sum of all transaction amounts
+                    const totalProfitLoss = (response.data.transactions || []).reduce((acc: number, transaction: Transaction) => acc + Number(transaction.amount), 0);
+                    setProfitLoss(totalProfitLoss);
+
                     console.log("Policy details fetched:", response.data);
                 }
             ).catch((error) => {
@@ -30,13 +39,6 @@ export default function PolicyDetail() {
         }
     }, [policyId]);
 
-    const tx5: Transaction[] = [{
-        id: 5,
-        amount: -20,
-        date: "2025-08-12",
-        type: "debit",
-        description: "Coffee shop",
-    }];
     return (
         <div>
             <Header />
@@ -46,21 +48,21 @@ export default function PolicyDetail() {
                     <Button variant={"outline"}>Edit</Button>
                 </div>
                 <div>
-                    Policy Number: 12345
+                    Policy Number: {policyDetails?.policy_number ?? 'Loading...'}
                 </div>
                 <div>
-                    Payment Method: Bank
+                    Payment Method: {policyDetails?.payment_method ?? 'Loading...'}
                 </div>
                 <div>
                     <div className="mt-10 font-bold">Policy Information</div>
                     <div className="flex flex-row justify-between">
                         <div>
                             <div>Date</div>
-                            <div>10-12-2024</div>
+                            <div>{policyDetails?.issue_date ?? 'Loading...'}</div>
                         </div>
                         <div>
                             <div>Insurance Company</div>
-                            <div>ABC Insurance</div>
+                            <div>{policyDetails?.insurance_company ?? 'Loading...'}</div>
                         </div>
                     </div>
 
@@ -68,11 +70,11 @@ export default function PolicyDetail() {
                     <div className="flex flex-row justify-between">
                         <div>
                             <div>Client</div>
-                            <div>Client 1</div>
+                            <div>{policyDetails?.client ?? 'Loading...'}</div>
                         </div>
                         <div>
                             <div>Agent Name</div>
-                            <div>ABC Insurance</div>
+                            <div>{policyDetails?.agent ?? 'Loading...'}</div>
                         </div>
                     </div>
 
@@ -80,11 +82,11 @@ export default function PolicyDetail() {
                     <div className="flex flex-row justify-between">
                         <div>
                             <div>Gross Price</div>
-                            <div>100</div>
+                            <div>{policyDetails?.gross_price ?? 'Loading...'}</div>
                         </div>
                         <div>
                             <div>CO Rate</div>
-                            <div>200</div>
+                            <div>{policyDetails?.co_rate ?? 'Loading...'}</div>
                         </div>
                     </div>
 
@@ -92,20 +94,20 @@ export default function PolicyDetail() {
                     <div className="flex flex-row justify-between">
                         <div>
                             <div>Client Price</div>
-                            <div>100$</div>
+                            <div>{policyDetails?.client_price ?? 'Loading...'}</div>
                         </div>
                         <div>
                             <div>Payment Status</div>
-                            <div>Cancelled</div>
+                            <div>{policyDetails?.payment_status ?? 'Loading...'}</div>
                         </div>
                     </div>
 
                     {/* Transaction history table */}
 
                     <div className="mt-10 font-bold">Transaction History</div>
-                    <TransactionTable transactions={tx5} />
+                    <TransactionTable transactions={transactions} />
 
-                    <div className="mt-10 font-bold">Profit/Loss 100</div>
+                    <div className="mt-10 font-bold">Profit/Loss {proftLoss}</div>
                     <Button variant={"destructive"}>Delete Policy</Button>
                 </div>
             </div>
