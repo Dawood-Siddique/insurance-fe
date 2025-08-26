@@ -22,6 +22,7 @@ export default function PolicyDetail() {
             .then(
                 (response) => {
                     setPolicyDetails(response.data);
+                    console.log("Policy details fetched:", response.data);
                 }
             ).catch((error) => {
                 console.error('Error fetching policy details:', error);
