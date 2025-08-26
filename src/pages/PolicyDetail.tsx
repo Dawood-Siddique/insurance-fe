@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 
 const baseURL = "http://127.0.0.1:8000/"
@@ -17,6 +18,17 @@ export default function PolicyDetail() {
     const [proftLoss, setProfitLoss] = useState<number | null>(null);
 
 
+    const handleDeletePolicy = (policy_id: number) => {
+        axios.delete(`${baseURL}policy/`,
+            {
+                data: { policy_id: policy_id }
+            }).then(response => {
+                console.log(`Policy delete ${response.data}`)
+            }).catch(error => {
+                console.log(error)
+            })
+    }
+    
 
     useEffect(() => {
         if (policyId) {
@@ -45,7 +57,9 @@ export default function PolicyDetail() {
             <div className="flex flex-col ml-20 mr-20 mt-10 ">
                 <div className="flex flex-row justify-between ">
                     <div className="text-2xl font-bold">Policy Detail</div>
-                    <Button variant={"outline"}>Edit</Button>
+                    <Button >
+                        <Link to={`/add-transaction/${policyId}`}>Add Transaction</Link>
+                    </Button>
                 </div>
                 <div>
                     Policy Number: {policyDetails?.policy_number ?? 'Loading...'}
@@ -108,7 +122,7 @@ export default function PolicyDetail() {
                     <TransactionTable transactions={transactions} />
 
                     <div className="mt-10 font-bold">Profit/Loss {proftLoss}</div>
-                    <Button variant={"destructive"}>Delete Policy</Button>
+                    <Button variant={"destructive"} onClick={() => handleDeletePolicy(policyDetails.id)}>Delete Policy</Button>
                 </div>
             </div>
         </div>

@@ -9,8 +9,22 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
+const baseURL = "http://127.0.0.1:8000/";
 
 export function TransactionTable({ transactions }: { transactions: Transaction[] }) {
+    const handleDelete = (transaction_id: number) => {
+        axios.delete(`${baseURL}ledger/`,
+            {
+                data: { transaction_id: transaction_id }
+            }).then(response => {
+                console.log(`Transaction delete ${response.data}`)
+            }).catch(error => {
+                console.log(error)
+            })
+    }
+
     return (
         <div>
             <div className="w-full">
@@ -32,8 +46,8 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                                 <TableCell>{transaction.amount}</TableCell>
                                 <TableCell>{transaction.description}</TableCell>
                                 <TableCell>
-                                    <Button variant={"outline"} asChild>
-                                        <Link to={`/add-transaction/${transaction.id}`}>Delete</Link>
+                                    <Button variant={"outline"} onClick={() => handleDelete(transaction.id)}>
+                                        Delete
                                     </Button>
                                 </TableCell>
                             </TableRow>

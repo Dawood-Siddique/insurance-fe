@@ -53,7 +53,7 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
                 <TableCell>{policy.payment_status}</TableCell>
                 <TableCell>
                   <Button asChild>
-                    <Link to={`/add-transaction/${policy.id}`}>Add Transaction</Link>
+                    <Link to={`/policy-detail/${policy.id}`}>Add Transaction</Link>
                   </Button>
                 </TableCell>
               </TableRow>
