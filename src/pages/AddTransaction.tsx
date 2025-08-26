@@ -11,7 +11,7 @@ const baseURL = "http://127.0.0.1:8000/"
 const Types = [
     { value: "cancelled", label: "cancelled" },
     { value: "payment", label: "payment" },
-    { value: "credit-adjustment", label: "credit-adjustment" },
+    { value: "credit_adjustment", label: "credit_adjustment" },
     { value: "payback", label: "payback" }
 ]
 

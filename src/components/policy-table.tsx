@@ -52,8 +52,8 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
                 <TableCell>{0}</TableCell>
                 <TableCell>{policy.payment_status}</TableCell>
                 <TableCell>
-                  <Button asChild>
-                    <Link to={`/policy-detail/${policy.id}`}>Add Transaction</Link>
+                  <Button variant={"outline"} asChild>
+                    <Link to={`/policy-detail/${policy.id}`}>Detail</Link>
                   </Button>
                 </TableCell>
               </TableRow>

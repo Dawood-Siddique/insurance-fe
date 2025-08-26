@@ -46,9 +46,9 @@ export default function PolicyDetail() {
                     let totalProfitLoss = 0
                     response.data.transactions.forEach((transaction: Transaction) => {
                         if (transaction.type === "cancelled" || transaction.type === "credit_adjustment") {
-                            totalProfitLoss -= transaction.amount
+                            totalProfitLoss -= Number(transaction.amount)
                         } else {
-                            totalProfitLoss += transaction.amount
+                            totalProfitLoss += Number(transaction.amount)
                         }
                     })
                     setProfitLoss(totalProfitLoss);
