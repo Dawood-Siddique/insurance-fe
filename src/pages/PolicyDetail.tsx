@@ -2,9 +2,32 @@ import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { TransactionTable } from "@/components/transaction-table"
 import { type Transaction } from "@/types";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 
+
+const baseURL = "http://127.0.0.1:8000/"
 
 export default function PolicyDetail() {
+    const policyId = useParams<{ policyId: string }>().policyId;
+    const [policyDetails, setPolicyDetails] = useState<any>(null);
+
+
+    useEffect(() => {
+        if (policyId) {
+            // Fetch policy details using policyId
+            axios.get(`${baseURL}policy-detail/?policy_id=${policyId}`)
+            .then(
+                (response) => {
+                    setPolicyDetails(response.data);
+                }
+            ).catch((error) => {
+                console.error('Error fetching policy details:', error);
+            });
+        }
+    }, [policyId]);
 
     const tx5: Transaction[] = [{
         id: 5,
