@@ -40,7 +40,17 @@ export default function PolicyDetail() {
                     setTransactions(response.data.transactions || []);
                     
                     // profitLoss is sum of all transaction amounts
-                    const totalProfitLoss = (response.data.transactions || []).reduce((acc: number, transaction: Transaction) => acc + Number(transaction.amount), 0);
+                    // if the transaction.type is cancelled or credit-adjustment, then subtract the amount
+                    // otherwise add the amount
+
+                    let totalProfitLoss = 0
+                    response.data.transactions.forEach((transaction: Transaction) => {
+                        if (transaction.type === "cancelled" || transaction.type === "credit_adjustment") {
+                            totalProfitLoss -= transaction.amount
+                        } else {
+                            totalProfitLoss += transaction.amount
+                        }
+                    })
                     setProfitLoss(totalProfitLoss);
 
                     console.log("Policy details fetched:", response.data);
