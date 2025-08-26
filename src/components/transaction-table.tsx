@@ -32,8 +32,8 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                                 <TableCell>{transaction.amount}</TableCell>
                                 <TableCell>{transaction.description}</TableCell>
                                 <TableCell>
-                                    <Button asChild>
-                                        <Link to={`/add-transaction/${transaction.id}`}>Add Transaction</Link>
+                                    <Button variant={"outline"} asChild>
+                                        <Link to={`/add-transaction/${transaction.id}`}>Delete</Link>
                                     </Button>
                                 </TableCell>
                             </TableRow>
