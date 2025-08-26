@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const baseURL = "http://127.0.0.1:8000/"
@@ -16,6 +17,7 @@ export default function PolicyDetail() {
     const [policyDetails, setPolicyDetails] = useState<any>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [proftLoss, setProfitLoss] = useState<number | null>(null);
+    const navigate = useNavigate();
 
 
     const handleDeletePolicy = (policy_id: number) => {
@@ -24,6 +26,7 @@ export default function PolicyDetail() {
                 data: { policy_id: policy_id }
             }).then(response => {
                 console.log(`Policy delete ${response.data}`)
+                navigate('/dashboard');
             }).catch(error => {
                 console.log(error)
             })

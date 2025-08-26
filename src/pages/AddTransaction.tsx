@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
 const baseURL = "http://127.0.0.1:8000/"
 const Types = [
@@ -24,6 +25,8 @@ export default function AddTransaction() {
     const [amount, setAmount] = useState<number | null>(null);
     const [description, setDescription] = useState("");
     const [beneficiaryBalance, setBeneficiaryBalance] = useState<number | null>(null);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         if (policyId) {
@@ -56,6 +59,7 @@ export default function AddTransaction() {
         })
             .then(response => {
                 console.log('Transaction created successfully!', response.data);
+                navigate(`/policy-detail/${policyId}`);
                 // Optionally, redirect or show a success message
             })
             .catch(error => {

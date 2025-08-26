@@ -20,6 +20,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                 data: { transaction_id: transaction_id }
             }).then(response => {
                 console.log(`Transaction delete ${response.data}`)
+                window.location.reload();
             }).catch(error => {
                 console.log(error)
             })
