@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { AddNewEntityDialog } from "@/components/add-new-entity-dialog"
 import axios from "axios";
+import { useNavigate } from "react-router-dom"
 
 // The hardcoded data objects are removed, as we will fetch from the backend.
 const baseURL = "http://127.0.0.1:8000/"
@@ -22,6 +23,7 @@ const paymentStatusObj = [
 
 
 export default function AddPolicy() {
+    const navigate = useNavigate()
     // --- State for form inputs ---
     // For foreign keys, we will store the ID. Initialize with null.
     const [company, setCompany] = useState(null);
@@ -72,6 +74,9 @@ export default function AddPolicy() {
         setProfit(calculatedProfit);
     }, [clientPrice, newCoRates]);
 
+    const handleCancel = () => {
+        navigate("/dashboard")
+    }
     // --- Handle form submission ---
     const handleSave = () => {
         // Construct the payload with keys matching the Django model fields
@@ -105,6 +110,7 @@ export default function AddPolicy() {
             .then(response => {
                 console.log('Policy created successfully!', response.data);
                 // Optionally, redirect or show a success message
+                navigate("/dashboard");
             })
             .catch(error => {
                 console.error('Failed to create policy:', error.response ? error.response.data : error);
@@ -305,7 +311,7 @@ export default function AddPolicy() {
 
                 {/* Cancel and Save Button */}
                 <div className="mt-8 flex justify-end space-x-4">
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline" onClick={handleCancel}>Cancel</Button>
                     <Button onClick={handleSave}>Save Policy</Button>
                 </div>
             </div>
