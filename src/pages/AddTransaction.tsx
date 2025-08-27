@@ -40,6 +40,10 @@ export default function AddTransaction() {
         }
     }, [policyId]);
 
+    const handleCancel = () => {
+        navigate(`/policy-detail/${policyId}`);
+    }
+
     const handleSave = () => {
         const transactionData = {
             policy: policyId,
@@ -107,7 +111,7 @@ export default function AddTransaction() {
                     <Input id="description" type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
                 </div>
                 <div className="mt-8 flex justify-end space-x-4">
-                    <Button variant={"outline"} >Cancel</Button>
+                    <Button variant={"outline"} onClick={handleCancel}>Cancel</Button>
                     <Button onClick={handleSave}>Save</Button>
                 </div>
             </div>

@@ -42,10 +42,6 @@ export default function PolicyDetail() {
                     setPolicyDetails(response.data);
                     setTransactions(response.data.transactions || []);
                     
-                    // profitLoss is sum of all transaction amounts
-                    // if the transaction.type is cancelled or credit-adjustment, then subtract the amount
-                    // otherwise add the amount
-
                     let totalProfitLoss = 0
                     response.data.transactions.forEach((transaction: Transaction) => {
                         if (transaction.type === "cancelled" || transaction.type === "credit_adjustment") {
