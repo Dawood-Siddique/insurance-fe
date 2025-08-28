@@ -42,7 +42,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                     <TableBody>
                         {transactions.map((transaction) => (
                             <TableRow key={transaction.id}>
-                                <TableCell>{transaction.date}</TableCell>
+                                <TableCell>{transaction.created_at}</TableCell>
                                 <TableCell>{transaction.type}</TableCell>
                                 <TableCell>{transaction.amount}</TableCell>
                                 <TableCell>{transaction.description}</TableCell>

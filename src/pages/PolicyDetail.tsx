@@ -4,7 +4,6 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
@@ -132,10 +131,10 @@ export default function PolicyDetail() {
                                 <p className="text-sm text-muted-foreground">Profit/Loss</p>
                                 <p
                                     className={`text-3xl font-bold ${proftLoss === null
-                                            ? ""
-                                            : proftLoss >= 0
-                                                ? "text-green-500"
-                                                : "text-red-500"
+                                        ? ""
+                                        : proftLoss >= 0
+                                            ? "text-green-500"
+                                            : "text-red-500"
                                         }`}
                                 >
                                     {proftLoss === null

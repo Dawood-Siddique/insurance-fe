@@ -16,7 +16,7 @@ export interface Policy {
 export interface Transaction {
   id: number;
   amount: number;
-  date: string;
+  created_at: string;
   type: string;
   description: string;
 }
