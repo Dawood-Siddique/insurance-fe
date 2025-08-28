@@ -40,7 +40,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {transactions.map((transaction) => (
+                        {[...transactions].reverse().map((transaction) => (
                             <TableRow key={transaction.id}>
                                 <TableCell>{transaction.created_at}</TableCell>
                                 <TableCell>{transaction.type}</TableCell>
