@@ -20,6 +20,7 @@ export default function PolicyDetail() {
     const [policyDetails, setPolicyDetails] = useState<any>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [proftLoss, setProfitLoss] = useState<number | null>(null);
+    const [exptectedProfit, setExptpectedProfit] = useState<number | null>(null);
     const navigate = useNavigate();
 
     const handleDeletePolicy = (policy_id: number) => {
@@ -35,6 +36,16 @@ export default function PolicyDetail() {
                 console.log(error);
             });
     };
+
+    const handleCancelPolicy = (policy_id: number) => {
+        axios.post(`${baseURL}cancel-policy/`, { policy_id: policy_id }).then((response) => {
+            console.log(`Policy cancel ${response.data}`);
+            navigate("/dashboard");
+        }).catch((error) => {
+            console.log(error);
+        });
+
+    }
 
     useEffect(() => {
         if (policyId) {
@@ -57,6 +68,7 @@ export default function PolicyDetail() {
                         }
                     });
                     setProfitLoss(totalProfitLoss);
+                    setExptpectedProfit(Number(response.data.client_price) - Number(response.data.co_rate))
 
                     console.log("Policy details fetched:", response.data);
                 })
@@ -139,7 +151,22 @@ export default function PolicyDetail() {
                                 >
                                     {proftLoss === null
                                         ? "Calculating..."
-                                        : `$${proftLoss.toFixed(2)}`}
+                                        : `${proftLoss.toFixed(2)}`}
+                                </p>
+                            </CardContent>
+                            <CardContent>
+                                <p className="text-sm text-muted-foreground">Expected Profit</p>
+                                <p
+                                    className={`text-3xl font-bold ${exptectedProfit === null
+                                        ? ""
+                                        : exptectedProfit >= 0
+                                            ? "text-green-500"
+                                            : "text-red-500"
+                                        }`}
+                                >
+                                    {exptectedProfit === null
+                                        ? "Calculating..."
+                                        : `${exptectedProfit.toFixed(2)}`}
                                 </p>
                             </CardContent>
                         </Card>
@@ -148,6 +175,16 @@ export default function PolicyDetail() {
                                 <CardTitle>Actions</CardTitle>
                                 <CardDescription>Manage this policy.</CardDescription>
                             </CardHeader>
+                            <CardContent>
+                                <Button
+                                    variant={"outline"}
+                                    onClick={() => handleCancelPolicy(policyDetails.id)}
+                                    disabled={!policyDetails}
+                                    className="w-full"
+                                >
+                                    Cancel Policy
+                                </Button>
+                            </CardContent>
                             <CardContent>
                                 <Button
                                     variant={"destructive"}
