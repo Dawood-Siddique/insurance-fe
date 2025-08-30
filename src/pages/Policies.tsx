@@ -1,37 +1,71 @@
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 const baseURL = "http://127.0.0.1:8000/";
 
-type TimeFrame = "All" | "Daily" | "Weekly" | "Monthly";
+type TimeFrame = "All" | "Daily" | "Weekly" | "Monthly" | "Month Start";
+
+type StatsData = {
+  [key: string]: {
+    policy_count: number;
+    profit: number;
+    revenue: number;
+    loss: number;
+  };
+};
 
 export default function Policies() {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>("All");
   const [totalPolicies, setTotalPolicies] = useState<number | null>(null);
   const [profit, setProfit] = useState<number | null>(null);
   const [revenue, setRevenue] = useState<number | null>(null);
-  const [cancelledPolicies, setCancelledPolicies] =useState<number | null>(null);
+  const [cancelledPolicies, setCancelledPolicies] = useState<number | null>(
+    null
+  );
   const [averageRate, setAverageRate] = useState<number | null>(null);
   const [averageProfit, setAverageProfit] = useState<number | null>(null);
+  const [statsData, setStatsData] = useState<StatsData | null>(null);
 
   // Fetch stats based on selected time frame
-  useEffect(() =>{
-    axios.get(`${baseURL}stats/`).then((res) => {
-      const data = res.data;
-      setTotalPolicies(data.total_policies);
-      setProfit(data.profit);
-      setRevenue(data.revenue);
-      setCancelledPolicies(data.cancelled_policies);
-      setAverageRate(data.average_rate);
-      setAverageProfit(data.average_profit);
+  useEffect(() => {
+    axios
+      .get(`${baseURL}stats/`)
+      .then((res) => {
+        setStatsData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching stats:", error);
+      });
+  }, []);
 
-      console.log(data);
-    }).catch((error) => {
-      console.error('Error fetching stats:', error);
-    });
-  }, [])
+  useEffect(() => {
+    if (statsData) {
+      const keyMap: { [key in TimeFrame]: string } = {
+        "Daily": "1",
+        "Weekly": "7",
+        "Monthly": "30",
+        "All": "all",
+        "Month Start": "start",
+      };
+      const key = keyMap[selectedTimeFrame];
+      const data = statsData[key];
+
+      if (data) {
+        setTotalPolicies(data.policy_count);
+        setProfit(data.profit);
+        setRevenue(data.revenue);
+        setCancelledPolicies(data.loss);
+        setAverageRate(
+          data.policy_count > 0 ? data.revenue / data.policy_count : 0
+        );
+        setAverageProfit(
+          data.policy_count > 0 ? data.profit / data.policy_count : 0
+        );
+      }
+    }
+  }, [selectedTimeFrame, statsData]);
 
   return (
     <div>
@@ -42,7 +76,7 @@ export default function Policies() {
         </div>
         <div className="flex justify-between w-full mt-4">
           <div className="gap-2 mt-4">
-            {(["All", "Daily", "Weekly", "Monthly"] as TimeFrame[]).map((frame) => (
+            {(["All", "Daily", "Weekly", "Monthly", "Month Start"] as TimeFrame[]).map((frame) => (
               <Button
                 key={frame}
                 variant={selectedTimeFrame === frame ? "default" : "outline"}
