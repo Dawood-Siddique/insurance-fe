@@ -9,6 +9,29 @@ type TimeFrame = "All" | "Daily" | "Weekly" | "Monthly";
 
 export default function Policies() {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>("All");
+  const [totalPolicies, setTotalPolicies] = useState<number | null>(null);
+  const [profit, setProfit] = useState<number | null>(null);
+  const [revenue, setRevenue] = useState<number | null>(null);
+  const [cancelledPolicies, setCancelledPolicies] =useState<number | null>(null);
+  const [averageRate, setAverageRate] = useState<number | null>(null);
+  const [averageProfit, setAverageProfit] = useState<number | null>(null);
+
+  // Fetch stats based on selected time frame
+  useEffect(() =>{
+    axios.get(`${baseURL}stats/`).then((res) => {
+      const data = res.data;
+      setTotalPolicies(data.total_policies);
+      setProfit(data.profit);
+      setRevenue(data.revenue);
+      setCancelledPolicies(data.cancelled_policies);
+      setAverageRate(data.average_rate);
+      setAverageProfit(data.average_profit);
+
+      console.log(data);
+    }).catch((error) => {
+      console.error('Error fetching stats:', error);
+    });
+  }, [])
 
   return (
     <div>
@@ -24,6 +47,7 @@ export default function Policies() {
                 key={frame}
                 variant={selectedTimeFrame === frame ? "default" : "outline"}
                 onClick={() => setSelectedTimeFrame(frame)}
+                className="mr-2"
               >
                 {frame}
               </Button>
@@ -37,36 +61,35 @@ export default function Policies() {
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Total Policies
             <br />
-            150
+            {totalPolicies !== null ? totalPolicies : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Profit
             <br />
-            150
+            {profit !== null ? profit : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Revenue
             <br />
-            150
+            {revenue !== null ? revenue : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Cancelled Policies
             <br />
-            150
+            {cancelledPolicies !== null ? cancelledPolicies : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Policy Average Rate
             <br />
-            150
+            {averageRate !== null ? averageRate : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Policy Average Profit
             <br />
-            150
+            {averageProfit !== null ? averageProfit : 'Loading...'}
           </div>
-
         </div>
-
+      
       </div>
     </div>
   );
