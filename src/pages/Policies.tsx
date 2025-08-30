@@ -13,19 +13,60 @@ export default function Policies() {
   return (
     <div>
       <Header />
-      <div className="flex flex-col items-center ml-20 mr-20 min-h-screen">
-        <div className="text-4xl font-bold">Policies Stat</div>
-        <div className="flex gap-2 mt-4">
-          {(["All", "Daily", "Weekly", "Monthly"] as TimeFrame[]).map((frame) => (
-            <Button
-              key={frame}
-              variant={selectedTimeFrame === frame ? "default" : "outline"}
-              onClick={() => setSelectedTimeFrame(frame)}
-            >
-              {frame}
-            </Button>
-          ))}
+      <div className="flex flex-col items-center ml-20 mr-20 min-h-screen ">
+        <div className="flex justify-between w-full mt-4">
+          <div className="text-4xl font-bold">Policies Stat</div>
         </div>
+        <div className="flex justify-between w-full mt-4">
+          <div className="gap-2 mt-4">
+            {(["All", "Daily", "Weekly", "Monthly"] as TimeFrame[]).map((frame) => (
+              <Button
+                key={frame}
+                variant={selectedTimeFrame === frame ? "default" : "outline"}
+                onClick={() => setSelectedTimeFrame(frame)}
+              >
+                {frame}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Cards for Stats */}
+
+        <div className="flex flex-wrap text-xl font-semibold">
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
+            Total Policies
+            <br />
+            150
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
+            Policies
+            <br />
+            150
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
+            Total Policies
+            <br />
+            150
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
+            Total Policies
+            <br />
+            150
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
+            Total Policies
+            <br />
+            150
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
+            Total Policies
+            <br />
+            150
+          </div>
+
+        </div>
+
       </div>
     </div>
   );
