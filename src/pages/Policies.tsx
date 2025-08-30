@@ -13,6 +13,9 @@ type StatsData = {
     profit: number;
     revenue: number;
     loss: number;
+    cancel_policy: number;
+    average_rate: number;
+    average_profit: number;
   };
 };
 
@@ -21,6 +24,7 @@ export default function Policies() {
   const [totalPolicies, setTotalPolicies] = useState<number | null>(null);
   const [profit, setProfit] = useState<number | null>(null);
   const [revenue, setRevenue] = useState<number | null>(null);
+  const [loss, setLoss] = useState<number | null>(null);
   const [cancelledPolicies, setCancelledPolicies] = useState<number | null>(
     null
   );
@@ -56,13 +60,10 @@ export default function Policies() {
         setTotalPolicies(data.policy_count);
         setProfit(data.profit);
         setRevenue(data.revenue);
-        setCancelledPolicies(data.loss);
-        setAverageRate(
-          data.policy_count > 0 ? data.revenue / data.policy_count : 0
-        );
-        setAverageProfit(
-          data.policy_count > 0 ? data.profit / data.policy_count : 0
-        );
+        setCancelledPolicies(data.cancel_policy);
+        setLoss(data.loss);
+        setAverageRate(data.average_rate);
+        setAverageProfit(data.average_profit);
       }
     }
   }, [selectedTimeFrame, statsData]);
@@ -108,6 +109,11 @@ export default function Policies() {
             {revenue !== null ? revenue : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Loss
+            <br />
+            {loss !== null ? loss : 'Loading...'}
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Cancelled Policies
             <br />
             {cancelledPolicies !== null ? cancelledPolicies : 'Loading...'}
@@ -123,7 +129,7 @@ export default function Policies() {
             {averageProfit !== null ? averageProfit : 'Loading...'}
           </div>
         </div>
-      
+
       </div>
     </div>
   );
