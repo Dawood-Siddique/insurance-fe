@@ -38,6 +38,7 @@ export default function Policies() {
       .get(`${baseURL}stats/`)
       .then((res) => {
         setStatsData(res.data);
+        console.log("Stats data fetched:", res.data);
       })
       .catch((error) => {
         console.error("Error fetching stats:", error);
