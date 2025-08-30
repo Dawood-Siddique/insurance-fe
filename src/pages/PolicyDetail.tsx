@@ -19,8 +19,6 @@ export default function PolicyDetail() {
     const { policyId } = useParams<{ policyId: string }>();
     const [policyDetails, setPolicyDetails] = useState<any>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [proftLoss, setProfitLoss] = useState<number | null>(null);
-    const [exptectedProfit, setExptpectedProfit] = useState<number | null>(null);
     const navigate = useNavigate();
 
     const handleDeletePolicy = (policy_id: number) => {
@@ -54,22 +52,6 @@ export default function PolicyDetail() {
                 .then((response) => {
                     setPolicyDetails(response.data);
                     setTransactions(response.data.transactions || []);
-
-                    let totalProfitLoss = 0;
-                    response.data.transactions.forEach((transaction: Transaction) => {
-                        if (
-                            transaction.type === "cancelled" ||
-                            transaction.type === "credit_adjustment" ||
-                            transaction.type === "payback"
-                        ) {
-                            totalProfitLoss -= Number(transaction.amount);
-                        } else {
-                            totalProfitLoss += Number(transaction.amount);
-                        }
-                    });
-                    setProfitLoss(totalProfitLoss);
-                    setExptpectedProfit(Number(response.data.client_price) - Number(response.data.co_rate))
-
                     console.log("Policy details fetched:", response.data);
                 })
                 .catch((error) => {
@@ -123,6 +105,10 @@ export default function PolicyDetail() {
                                 value={policyDetails?.client_price}
                             />
                             <DetailItem
+                                label="Exptected Profit"
+                                value={policyDetails?.expected_profit}
+                            />
+                            <DetailItem
                                 label="Payment Status"
                                 value={policyDetails?.payment_status}
                             />
@@ -141,32 +127,7 @@ export default function PolicyDetail() {
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-muted-foreground">Profit/Loss</p>
-                                <p
-                                    className={`text-3xl font-bold ${proftLoss === null
-                                        ? ""
-                                        : proftLoss >= 0
-                                            ? "text-green-500"
-                                            : "text-red-500"
-                                        }`}
-                                >
-                                    {proftLoss === null
-                                        ? "Calculating..."
-                                        : `${proftLoss.toFixed(2)}`}
-                                </p>
-                            </CardContent>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground">Expected Profit</p>
-                                <p
-                                    className={`text-3xl font-bold ${exptectedProfit === null
-                                        ? ""
-                                        : exptectedProfit >= 0
-                                            ? "text-green-500"
-                                            : "text-red-500"
-                                        }`}
-                                >
-                                    {exptectedProfit === null
-                                        ? "Calculating..."
-                                        : `${exptectedProfit.toFixed(2)}`}
+                                <p className="font-medium text-4xl">{policyDetails?.profit_loss ?? "Loading..."}
                                 </p>
                             </CardContent>
                         </Card>
