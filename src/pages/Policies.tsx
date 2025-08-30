@@ -34,33 +34,33 @@ export default function Policies() {
         {/* Cards for Stats */}
 
         <div className="flex flex-wrap text-xl font-semibold">
-          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Total Policies
             <br />
             150
           </div>
-          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
-            Policies
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Profit
             <br />
             150
           </div>
-          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
-            Total Policies
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Revenue
             <br />
             150
           </div>
-          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
-            Total Policies
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Cancelled Policies
             <br />
             150
           </div>
-          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
-            Total Policies
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Policy Average Rate
             <br />
             150
           </div>
-          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-64" >
-            Total Policies
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Policy Average Profit
             <br />
             150
           </div>
