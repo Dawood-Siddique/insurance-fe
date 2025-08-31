@@ -11,6 +11,7 @@ export interface Policy {
   co_rate: number;
   client_price: number;
   payment_status: 'active' | 'complete' | 'cancelled';
+  profit_loss: number;
 }
 
 export interface Transaction {

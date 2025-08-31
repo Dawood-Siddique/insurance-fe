@@ -49,7 +49,7 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
                 <TableCell>{policy.co_rate}</TableCell>
                 <TableCell>{policy.client_price}</TableCell>
                 <TableCell>{ policy.client_price - policy.co_rate }</TableCell>
-                <TableCell>{0}</TableCell>
+                <TableCell>{policy.profit_loss}</TableCell>
                 <TableCell>{policy.payment_status}</TableCell>
                 <TableCell>
                   <Button variant={"outline"} asChild>
