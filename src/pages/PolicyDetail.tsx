@@ -7,6 +7,13 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { TransactionTable } from "@/components/transaction-table";
 import { type Transaction } from "@/types";
 import { useEffect, useState } from "react";
@@ -19,6 +26,7 @@ export default function PolicyDetail() {
     const { policyId } = useParams<{ policyId: string }>();
     const [policyDetails, setPolicyDetails] = useState<any>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [newStatus, setNewStatus] = useState<string>("");
     const navigate = useNavigate();
 
     const handleDeletePolicy = (policy_id: number) => {
@@ -35,15 +43,20 @@ export default function PolicyDetail() {
             });
     };
 
-    const handleCancelPolicy = (policy_id: number) => {
-        axios.post(`${baseURL}cancel-policy/`, { policy_id: policy_id }).then((response) => {
-            console.log(`Policy cancel ${response.data}`);
-            navigate("/dashboard");
-        }).catch((error) => {
-            console.log(error);
-        });
-
-    }
+    const handleChangeStatus = (policy_id: number, status: string) => {
+        axios
+            .post(`${baseURL}change-status/`, {
+                policy_id: policy_id,
+                status: status,
+            })
+            .then((response) => {
+                console.log(`Policy status changed to ${status}: ${response.data}`);
+                // navigate("/dashboard");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     useEffect(() => {
         if (policyId) {
@@ -136,17 +149,26 @@ export default function PolicyDetail() {
                                 <CardTitle>Actions</CardTitle>
                                 <CardDescription>Manage this policy.</CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <Button
-                                    variant={"outline"}
-                                    onClick={() => handleCancelPolicy(policyDetails.id)}
-                                    disabled={!policyDetails}
-                                    className="w-full"
-                                >
-                                    Cancel Policy
-                                </Button>
-                            </CardContent>
-                            <CardContent>
+                            <CardContent className="grid gap-4">
+                                <div className="flex items-center space-x-2">
+                                    <Select onValueChange={setNewStatus} value={newStatus}>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Select status" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="active">Active</SelectItem>
+                                            <SelectItem value="complete">Complete</SelectItem>
+                                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <Button
+                                        onClick={() => handleChangeStatus(policyDetails.id, newStatus)}
+                                        disabled={!policyDetails || !newStatus}
+                                        variant={"secondary"}
+                                    >
+                                        Update
+                                    </Button>
+                                </div>
                                 <Button
                                     variant={"destructive"}
                                     onClick={() => handleDeletePolicy(policyDetails.id)}
