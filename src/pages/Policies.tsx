@@ -125,7 +125,7 @@ export default function Policies() {
             {averageRate !== null ? averageRate : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
-            Policy Average Profit
+            Average Exptected Profit
             <br />
             {averageProfit !== null ? averageProfit : 'Loading...'}
           </div>
