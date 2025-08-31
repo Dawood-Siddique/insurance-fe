@@ -8,7 +8,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Alert } from "@/components/alert";
 import axios from "axios";
 
 const baseURL = "http://127.0.0.1:8000/";
@@ -47,9 +47,16 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                                 <TableCell>{transaction.amount}</TableCell>
                                 <TableCell>{transaction.description}</TableCell>
                                 <TableCell>
-                                    <Button variant={"outline"} onClick={() => handleDelete(transaction.id)}>
-                                        Delete
-                                    </Button>
+                                    <Alert
+                                        onConfirm={() => handleDelete(transaction.id)}
+                                        title="Are you absolutely sure?"
+                                        description="This action cannot be undone. This will permanently delete this transaction and remove its data from our servers."
+                                        trigger={
+                                            <Button variant={"outline"}>
+                                                Delete
+                                            </Button>
+                                        }
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}

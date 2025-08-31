@@ -14,6 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Alert } from "@/components/alert";
 import { TransactionTable } from "@/components/transaction-table";
 import { type Transaction } from "@/types";
 import { useEffect, useState } from "react";
@@ -169,14 +170,20 @@ export default function PolicyDetail() {
                                         Update
                                     </Button>
                                 </div>
-                                <Button
-                                    variant={"destructive"}
-                                    onClick={() => handleDeletePolicy(policyDetails.id)}
-                                    disabled={!policyDetails}
-                                    className="w-full"
-                                >
-                                    Delete Policy
-                                </Button>
+                                <Alert
+                                    onConfirm={() => handleDeletePolicy(policyDetails.id)}
+                                    title="Are you absolutely sure?"
+                                    description="This action cannot be undone. This will permanently delete this policy and remove its data from our servers."
+                                    trigger={
+                                        <Button
+                                            variant={"destructive"}
+                                            disabled={!policyDetails}
+                                            className="w-full"
+                                        >
+                                            Delete Policy
+                                        </Button>
+                                    }
+                                />
                             </CardContent>
                         </Card>
                     </div>
