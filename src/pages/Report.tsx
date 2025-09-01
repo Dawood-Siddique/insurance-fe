@@ -3,6 +3,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const baseURL = "http://127.0.0.1:8000/"
 
@@ -11,10 +12,50 @@ export default function Report() {
   const [agentName, setagentName] = useState("");
   const [insuranceCompany, setInsuranceCompany] = useState("");
   const [status, setStatus] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const [insuranceCompanies, setInsuranceCompanies] = useState([]);
   const [agents, setAgents] = useState([]);
   const [clients, setClients] = useState([]);
+
+  const handleGenerateReport = () => {
+    // Implement report generation logic here
+    console.log("Generating report with the following filters:");
+    console.log("Insured Name:", insuredName);
+    console.log("Agent Name:", agentName);
+    console.log("Insurance Company:", insuranceCompany);
+    console.log("Status:", status);
+    console.log("Start Date:", startDate);
+    console.log("End Date:", endDate);
+
+    // Microsoft Excel file will be sent by the backend to be downloaded
+    axios.get(`${baseURL}report/download/`, {
+      responseType: 'blob',
+      params: {
+        insured_name: insuredName,
+        agent_name: agentName,
+        insurance_company: insuranceCompany,
+        status: status,
+        start_date: startDate,
+        end_date: endDate
+      }
+
+    }).then((response) => {
+      // Create a blob from the response data
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+      // Create a link element to trigger the download
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'report.xlsx'; // Set the desired file name
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }).catch((error) => {
+      console.error('Error generating report:', error);
+    });
+  };
 
   useEffect(() => {
     // Helper function to fetch and format data for the Combobox
@@ -53,6 +94,15 @@ export default function Report() {
               />
             </div>
           </div>
+        <div className="m-5 w-50">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        </div>
+
+        <div className="m-5 w-50">
+          <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+          <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+        </div>
 
           <div className="m-5">
             <div>Agent Name</div>
@@ -74,7 +124,7 @@ export default function Report() {
                 items={insuranceCompanies}
                 value={insuranceCompany}
                 onChange={setInsuranceCompany}
-                placeholder="Select Insurance Company"
+                placeholder="Select Company"
                 noResultsMessage="No insurance companies found"
               />
             </div>
@@ -85,9 +135,9 @@ export default function Report() {
             <div>
               <Combobox
                 items={[
-                  { value: 'Active', label: 'Active' },
-                  { value: 'Cancelled', label: 'Cancelled' },
-                  // { value: 'Expired', label: 'Expired' },
+                  { value: 'active', label: 'Active' },
+                  { value: 'cancelled', label: 'Cancelled' },
+                  { value: 'complete', label: 'Complete' },
                 ]}
                 value={status}
                 onChange={setStatus}
@@ -98,9 +148,9 @@ export default function Report() {
           </div>
 
           <div className="m-5">
-                <Button  variant="default">
-                  Generate Report
-                </Button>
+            <Button onClick={handleGenerateReport} className="mt-6">
+              Generate Report
+            </Button>
           </div>
         </div>
 
