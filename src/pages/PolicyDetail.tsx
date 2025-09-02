@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Alert } from "@/components/alert";
+import { ErrorAlert } from "@/components/error-alert";
 import { TransactionTable } from "@/components/transaction-table";
 import { type Transaction } from "@/types";
 import { useEffect, useState } from "react";
@@ -28,6 +29,7 @@ export default function PolicyDetail() {
     const [policyDetails, setPolicyDetails] = useState<any>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [newStatus, setNewStatus] = useState<string>("");
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const handleDeletePolicy = (policy_id: number) => {
@@ -41,6 +43,7 @@ export default function PolicyDetail() {
             })
             .catch((error) => {
                 console.log(error);
+                setError(error.message || "An unexpected error occurred.");
             });
     };
 
@@ -56,6 +59,7 @@ export default function PolicyDetail() {
             })
             .catch((error) => {
                 console.log(error);
+                setError(error.message || "An unexpected error occurred.");
             });
     };
 
@@ -70,6 +74,7 @@ export default function PolicyDetail() {
                 })
                 .catch((error) => {
                     console.error("Error fetching policy details:", error);
+                    setError(error.message || "An unexpected error occurred.");
                 });
         }
     }, [policyId]);
@@ -203,6 +208,7 @@ export default function PolicyDetail() {
                     </Card>
                 </div>
             </main>
+            <ErrorAlert error={error} onClose={() => setError(null)} />
         </div>
     );
 }
