@@ -15,7 +15,7 @@ const paymentStatusObj = [
     { value: 'cancelled', label: 'Cancelled' }
 ]
 
-export default function Dashboard() {
+export default function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [policies, setPolicies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [agents, setAgents] = useState([]);
@@ -136,7 +136,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <Header />
+      <Header onLogout={onLogout} />
       <div className="flex flex-col items-center ml-20 mr-20 min-h-screen">
         <div className="flex justify-between w-full p-4">
           <div className="text-4xl font-bold">Policies</div>
