@@ -48,6 +48,10 @@ export default function AddTransaction() {
     }
 
     const handleSave = () => {
+        if (!amount || !type) {
+            setError("Please fill in all required fields: Amount and Type.");
+            return;
+        }
         const transactionData = {
             policy: policyId,
             date: date,

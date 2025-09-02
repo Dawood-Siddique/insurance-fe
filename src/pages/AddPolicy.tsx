@@ -84,6 +84,12 @@ export default function AddPolicy() {
     }
     // --- Handle form submission ---
     const handleSave = () => {
+        // Check required fields
+        if (!policyNumber || !grossPrice || !newCoRates || !clientPrice || !payment || !paymentStatus) {
+            setError("Please fill in all required fields: Policy Number, Gross Price, CO Rate, Client Price, Payment Method, Payment Status.");
+            return;
+        }
+
         // Construct the payload with keys matching the Django model fields
         const policyData = {
             issue_date: date,
