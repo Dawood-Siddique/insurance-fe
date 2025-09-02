@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Report from './pages/Report';
 import Policies from './pages/Policies';
@@ -8,23 +8,19 @@ import AddPolicy from './pages/AddPolicy';
 import AddTransaction from './pages/AddTransaction';
 import PolicyDetail from './pages/PolicyDetail';
 
+const ProtectedRoute = ({ token, children }: { token: string | null, children: JSX.Element }) => {
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
 export default function App() {
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<any | null>(null);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [user, setUser] = useState<any | null>(JSON.parse(localStorage.getItem('user') || 'null'));
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    if (storedToken) {
-      setToken(storedToken);
-    }
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  const handleLogin = (data: { token: {access: string}; user: any }) => {
-    const accessToken = data.token.access
+  const handleLogin = (data: { token: { access: string }; user: any }) => {
+    const accessToken = data.token.access;
     setToken(accessToken);
     setUser(data.user);
     localStorage.setItem('token', accessToken);
@@ -38,40 +34,14 @@ export default function App() {
     localStorage.removeItem('user');
   };
 
-  const router = createBrowserRouter([
-    {
-      path: '/login',
-      element: token ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />,
-    },
-    {
-      path: '/dashboard',
-      element: token ? <Dashboard onLogout={handleLogout} /> : <Navigate to="/login" />,
-    },
-    {
-      path: '/report',
-      element: token ? <Report /> : <Navigate to="/login" />,
-    },
-    {
-      path: '/policies',
-      element: token ? <Policies /> : <Navigate to="/login" />,
-    },
-    {
-      path: '/add-policy',
-      element: token ? <AddPolicy /> : <Navigate to="/login" />,
-    },
-    {
-      path: '/add-transaction/:policyId',
-      element: token ? <AddTransaction /> : <Navigate to="/login" />,
-    },
-    {
-      path: '/policy-detail/:policyId',
-      element: token ? <PolicyDetail /> : <Navigate to="/login" />,
-    },
-    {
-      path: '/',
-      element: <Navigate to="/dashboard" />,
-    },
-  ]);
-
-  return <RouterProvider router={router} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/add-transaction/:policyId" element={<ProtectedRoute token={token}><AddTransaction /></ProtectedRoute>} />
+        <Route path="/policy-detail/:policyId" element={<ProtectedRoute token={token}><PolicyDetail /></ProtectedRoute>} />
+        
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
