@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -18,7 +17,7 @@ export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div"> & {
-  onLogin: (data: { token: string; user: any }) => void;
+  onLogin: (data: { access: string; refresh: string }) => void;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +30,6 @@ export default function LoginForm({
     setError(null);
     try {
       const data = await login({ email, password });
-      console.log('Data passed to onLogin:', data);
       onLogin(data);
     } catch (error: any) {
       setError(error.message);

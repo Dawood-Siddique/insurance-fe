@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Report from './pages/Report';
@@ -17,23 +17,16 @@ const ProtectedRoute = ({ token, children }: { token: string | null, children: J
 
 export default function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-  const [user, setUser] = useState<any | null>(JSON.parse(localStorage.getItem('user') || 'null'));
 
-  const handleLogin = (data: { token: { access: string }; user: any }) => {
-    console.log('handleLogin received data:', data);
-    const accessToken = data.token.access;
-    console.log('Extracted access token:', accessToken);
+  const handleLogin = (data: { access: string; refresh: string }) => {
+    const accessToken = data.access;
     setToken(accessToken);
-    setUser(data.user);
     localStorage.setItem('token', accessToken);
-    localStorage.setItem('user', JSON.stringify(data.user));
   };
 
   const handleLogout = () => {
     setToken(null);
-    setUser(null);
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
   };
 
   return (
