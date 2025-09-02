@@ -16,6 +16,8 @@ type StatsData = {
     cancel_policy: number;
     average_rate: number;
     average_profit: number;
+    expected_money: number;
+    current_money: number;
   };
 };
 
@@ -30,6 +32,10 @@ export default function Policies() {
   );
   const [averageRate, setAverageRate] = useState<number | null>(null);
   const [averageProfit, setAverageProfit] = useState<number | null>(null);
+  const [expectedMoney, setExpectedMoney] = useState<number | null>(null);
+  const [currentMoney, setCurrentMoney] = useState<number | null>(null);
+
+
   const [statsData, setStatsData] = useState<StatsData | null>(null);
 
   // Fetch stats based on selected time frame
@@ -65,6 +71,8 @@ export default function Policies() {
         setLoss(data.loss);
         setAverageRate(data.average_rate);
         setAverageProfit(data.average_profit);
+        setExpectedMoney(data.expected_money);
+        setCurrentMoney(data.current_money);
       }
     }
   }, [selectedTimeFrame, statsData]);
@@ -125,9 +133,20 @@ export default function Policies() {
             {averageRate !== null ? averageRate : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
-            Average Exptected Profit
+            Average Expected Profit
             <br />
             {averageProfit !== null ? averageProfit : 'Loading...'}
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Expected Money
+            <br />
+            {expectedMoney !== null ? expectedMoney : 'Loading...'}
+          </div>
+
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Current Money
+            <br />
+            {currentMoney !== null ? currentMoney : 'Loading...'}
           </div>
         </div>
 
