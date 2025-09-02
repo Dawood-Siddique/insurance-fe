@@ -37,6 +37,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={token ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} />
+        
+        <Route path="/dashboard" element={<ProtectedRoute token={token}><Dashboard onLogout={handleLogout} /></ProtectedRoute>} />
+        <Route path="/report" element={<ProtectedRoute token={token}><Report /></ProtectedRoute>} />
+        <Route path="/policies" element={<ProtectedRoute token={token}><Policies /></ProtectedRoute>} />
+        <Route path="/add-policy" element={<ProtectedRoute token={token}><AddPolicy /></ProtectedRoute>} />
         <Route path="/add-transaction/:policyId" element={<ProtectedRoute token={token}><AddTransaction /></ProtectedRoute>} />
         <Route path="/policy-detail/:policyId" element={<ProtectedRoute token={token}><PolicyDetail /></ProtectedRoute>} />
         
