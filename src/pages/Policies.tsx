@@ -2,6 +2,7 @@ import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { ErrorAlert } from "@/components/error-alert";
 
 const baseURL = "http://127.0.0.1:8000/";
 
@@ -37,6 +38,7 @@ export default function Policies() {
 
 
   const [statsData, setStatsData] = useState<StatsData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch stats based on selected time frame
   useEffect(() => {
@@ -48,6 +50,7 @@ export default function Policies() {
       })
       .catch((error) => {
         console.error("Error fetching stats:", error);
+        setError(error.message || "An unexpected error occurred.");
       });
   }, []);
 
@@ -151,6 +154,7 @@ export default function Policies() {
         </div>
 
       </div>
+      <ErrorAlert error={error} onClose={() => setError(null)} />
     </div>
   );
 }

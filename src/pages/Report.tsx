@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ErrorAlert } from "@/components/error-alert";
 
 const baseURL = "http://127.0.0.1:8000/"
 
@@ -14,6 +15,7 @@ export default function Report() {
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const [insuranceCompanies, setInsuranceCompanies] = useState([]);
   const [agents, setAgents] = useState([]);
@@ -54,6 +56,7 @@ export default function Report() {
       document.body.removeChild(link);
     }).catch((error) => {
       console.error('Error generating report:', error);
+      setError(error.message || "An unexpected error occurred.");
     });
   };
 
@@ -66,7 +69,10 @@ export default function Report() {
           // const formattedData = data.map(item => ({ value: item.name, label: item.id }));
           setter(formattedData);
         })
-        .catch(error => console.error(`Failed to fetch data from ${url}:`, error));
+        .catch(error => {
+          console.error(`Failed to fetch data from ${url}:`, error)
+          setError(error.message || "An unexpected error occurred.");
+        });
     };
 
     // Replace with your actual API endpoints
@@ -155,6 +161,7 @@ export default function Report() {
         </div>
 
       </div>
+      <ErrorAlert error={error} onClose={() => setError(null)} />
     </div>
   );
 }

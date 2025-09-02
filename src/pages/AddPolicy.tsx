@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { AddNewEntityDialog } from "@/components/add-new-entity-dialog"
 import axios from "axios";
 import { useNavigate } from "react-router-dom"
+import { ErrorAlert } from "@/components/error-alert";
 
 // The hardcoded data objects are removed, as we will fetch from the backend.
 const baseURL = "http://127.0.0.1:8000/"
@@ -43,6 +44,7 @@ export default function AddPolicy() {
     const [referenceNumber, setReferenceNumber] = useState<number>(0);
     const [payment, setPayment] = useState("");
     const [paymentStatus, setPaymentStatus] = useState("");
+    const [error, setError] = useState<string | null>(null);
 
     // --- State for options fetched from backend ---
     const [insuranceCompanies, setInsuranceCompanies] = useState([]);
@@ -59,7 +61,10 @@ export default function AddPolicy() {
                     // const formattedData = data.map(item => ({ value: item.name, label: item.id }));
                     setter(formattedData);
                 })
-                .catch(error => console.error(`Failed to fetch data from ${url}:`, error));
+                .catch(error => {
+                    console.error(`Failed to fetch data from ${url}:`, error)
+                    setError(error.message || "An unexpected error occurred.");
+                });
         };
 
         // Replace with your actual API endpoints
@@ -79,6 +84,12 @@ export default function AddPolicy() {
     }
     // --- Handle form submission ---
     const handleSave = () => {
+        // Check required fields
+        if (!policyNumber || !grossPrice || !newCoRates || !clientPrice || !payment || !paymentStatus) {
+            setError("Please fill in all required fields: Policy Number, Gross Price, CO Rate, Client Price, Payment Method, Payment Status.");
+            return;
+        }
+
         // Construct the payload with keys matching the Django model fields
         const policyData = {
             issue_date: date,
@@ -114,7 +125,7 @@ export default function AddPolicy() {
             })
             .catch(error => {
                 console.error('Failed to create policy:', error.response ? error.response.data : error);
-                // Show an error message to the user
+                setError(error.message || "An unexpected error occurred.");
             });
     };
 
@@ -133,7 +144,10 @@ export default function AddPolicy() {
                 setInsuranceCompanies(prev => [...prev, newOption]);
                 setCompany(newCompany.id);
             })
-            .catch(error => console.error('Failed to create new company:', error.response ? error.response.data : error));
+            .catch(error => {
+                console.error('Failed to create new company:', error.response ? error.response.data : error)
+                setError(error.message || "An unexpected error occurred.");
+            });
     };
 
     const handleSaveNewAgent = (newAgentName) => {
@@ -150,7 +164,10 @@ export default function AddPolicy() {
                 setAgents(prev => [...prev, newOption]);
                 setAgentName(newAgent.id);
             })
-            .catch(error => console.error('Failed to create new agent:', error.response ? error.response.data : error));
+            .catch(error => {
+                console.error('Failed to create new agent:', error.response ? error.response.data : error)
+                setError(error.message || "An unexpected error occurred.");
+            });
 
     }
 
@@ -168,7 +185,10 @@ export default function AddPolicy() {
                 setClients(prev => [...prev, newOption]);
                 setInsuredName(newClient.id);
             })
-            .catch(error => console.error('Failed to create new agent:', error.response ? error.response.data : error));
+            .catch(error => {
+                console.error('Failed to create new agent:', error.response ? error.response.data : error)
+                setError(error.message || "An unexpected error occurred.");
+            });
     }
     return (
         <div className="container mx-auto p-4">
@@ -315,6 +335,7 @@ export default function AddPolicy() {
                     <Button onClick={handleSave}>Save Policy</Button>
                 </div>
             </div>
+            <ErrorAlert error={error} onClose={() => setError(null)} />
         </div>
     )
 }

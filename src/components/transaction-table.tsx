@@ -10,10 +10,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/alert";
 import axios from "axios";
+import { useState } from "react";
+import { ErrorAlert } from "@/components/error-alert";
 
 const baseURL = "http://127.0.0.1:8000/";
 
 export function TransactionTable({ transactions }: { transactions: Transaction[] }) {
+    const [error, setError] = useState<string | null>(null);
+
     const handleDelete = (transaction_id: number) => {
         axios.delete(`${baseURL}ledger/`,
             {
@@ -23,6 +27,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                 window.location.reload();
             }).catch(error => {
                 console.log(error)
+                setError(error.message || "An unexpected error occurred.");
             })
     }
 
@@ -63,6 +68,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                     </TableBody>
                 </Table>
             </div>
+            <ErrorAlert error={error} onClose={() => setError(null)} />
         </div>
     );
 }

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { ErrorAlert } from "@/components/error-alert";
 
 const baseURL = "http://127.0.0.1:8000/"
 const Types = [
@@ -25,6 +26,7 @@ export default function AddTransaction() {
     const [amount, setAmount] = useState<number | null>(null);
     const [description, setDescription] = useState("");
     const [beneficiaryBalance, setBeneficiaryBalance] = useState<number | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
 
@@ -36,6 +38,7 @@ export default function AddTransaction() {
                 })
                 .catch(error => {
                     console.error('Failed to fetch beneficiary balance:', error.response ? error.response.data : error);
+                    setError(error.message || "An unexpected error occurred.");
                 });
         }
     }, [policyId]);
@@ -45,6 +48,10 @@ export default function AddTransaction() {
     }
 
     const handleSave = () => {
+        if (!amount || !type) {
+            setError("Please fill in all required fields: Amount and Type.");
+            return;
+        }
         const transactionData = {
             policy: policyId,
             date: date,
@@ -68,7 +75,7 @@ export default function AddTransaction() {
             })
             .catch(error => {
                 console.error('Failed to create transaction:', error.response ? error.response.data : error);
-                // Show an error message to the user
+                setError(error.message || "An unexpected error occurred.");
             });
     }
 
@@ -115,6 +122,7 @@ export default function AddTransaction() {
                     <Button onClick={handleSave}>Save</Button>
                 </div>
             </div>
+            <ErrorAlert error={error} onClose={() => setError(null)} />
         </div>
     )
 }

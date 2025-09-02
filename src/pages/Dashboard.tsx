@@ -6,6 +6,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ErrorAlert } from "@/components/error-alert";
 
 const baseURL = "http://127.0.0.1:8000/";
 const paymentStatusObj = [
@@ -20,6 +21,7 @@ export default function Dashboard() {
   const [agents, setAgents] = useState([]);
   const [clients, setClients] = useState([]);
   const [insuranceCompanies, setInsuranceCompanies] = useState([]);
+  const [error, setError] = useState<string | null>(null);
   
   // Filter states
   const [selectedAgent, setSelectedAgent] = useState('');
@@ -55,6 +57,7 @@ export default function Dashboard() {
       setPolicies(res.data);
     }).catch((error) => {
       console.error('Error fetching policies:', error);
+      setError(error.message || "An unexpected error occurred.");
     });
   }, []);
 
@@ -65,6 +68,7 @@ export default function Dashboard() {
       setAgents(res.data);
     }).catch((error) => {
       console.error('Error fetching agents:', error);
+      setError(error.message || "An unexpected error occurred.");
     });
 
     // Fetch clients
@@ -72,6 +76,7 @@ export default function Dashboard() {
       setClients(res.data);
     }).catch((error) => {
       console.error('Error fetching clients:', error);
+      setError(error.message || "An unexpected error occurred.");
     });
 
     // Fetch insurance companies
@@ -79,6 +84,7 @@ export default function Dashboard() {
       setInsuranceCompanies(res.data);
     }).catch((error) => {
       console.error('Error fetching insurance companies:', error);
+      setError(error.message || "An unexpected error occurred.");
     });
   }, []);
 
@@ -238,6 +244,7 @@ export default function Dashboard() {
           <PolicyTable policies={filteredPolicies} />
         </div>
       </div>
+      <ErrorAlert error={error} onClose={() => setError(null)} />
     </div>
   );
 }
