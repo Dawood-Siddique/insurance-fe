@@ -37,3 +37,8 @@ export interface InsuranceCompany {
   id: number;
   name: string;
 }
+
+export interface Credentials {
+  email: string;
+  password: string;
+}
