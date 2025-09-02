@@ -13,7 +13,7 @@ import { useState } from "react";
 import { login } from "@/services/auth";
 import { ErrorAlert } from "./error-alert";
 
-export function LoginForm({
+export default function LoginForm({
   onLogin,
   className,
   ...props
@@ -31,6 +31,7 @@ export function LoginForm({
     setError(null);
     try {
       const data = await login({ email, password });
+      console.log('Data passed to onLogin:', data);
       onLogin(data);
     } catch (error: any) {
       setError(error.message);

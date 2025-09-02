@@ -17,5 +17,6 @@ export const login = async (credentials: Credentials) => {
   }
 
   const data = await response.json();
+  console.log('API response data:', data);
   return data;
 };

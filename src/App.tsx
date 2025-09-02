@@ -20,7 +20,9 @@ export default function App() {
   const [user, setUser] = useState<any | null>(JSON.parse(localStorage.getItem('user') || 'null'));
 
   const handleLogin = (data: { token: { access: string }; user: any }) => {
+    console.log('handleLogin received data:', data);
     const accessToken = data.token.access;
+    console.log('Extracted access token:', accessToken);
     setToken(accessToken);
     setUser(data.user);
     localStorage.setItem('token', accessToken);

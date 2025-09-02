@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/login-form";
+import LoginForm from "@/components/login-form";
 
 const Login = ({ onLogin }: { onLogin: (data: { token: string; user: any }) => void }) => {
   return (
