@@ -22,7 +22,7 @@ type StatsData = {
   };
 };
 
-export default function Policies() {
+export default function Policies({ onLogout }: { onLogout: () => void }) {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>("All");
   const [totalPolicies, setTotalPolicies] = useState<number | null>(null);
   const [profit, setProfit] = useState<number | null>(null);
@@ -82,7 +82,7 @@ export default function Policies() {
 
   return (
     <div>
-      <Header />
+      <Header onLogout={onLogout} />
       <div className="flex flex-col items-center ml-20 mr-20 min-h-screen ">
         <div className="flex justify-between w-full mt-4">
           <div className="text-4xl font-bold">Policies Stat</div>

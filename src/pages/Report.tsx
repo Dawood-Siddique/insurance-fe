@@ -8,7 +8,7 @@ import { ErrorAlert } from "@/components/error-alert";
 
 const baseURL = "http://127.0.0.1:8000/"
 
-export default function Report() {
+export default function Report({ onLogout }: { onLogout: () => void }) {
   const [insuredName, setInsuredName] = useState("");
   const [agentName, setagentName] = useState("");
   const [insuranceCompany, setInsuranceCompany] = useState("");
@@ -82,7 +82,7 @@ export default function Report() {
   }, []);
   return (
     <div>
-      <Header />
+      <Header onLogout={onLogout} />
       <div className="flex flex-col flex-center ml-20 mr-20 min-h-screen">
         <div className="flex justify-between w-full mt-4">
           <div className="text-4xl font-bold">Report</div>

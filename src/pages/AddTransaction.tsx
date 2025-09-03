@@ -19,7 +19,7 @@ const Types = [
 
 
 
-export default function AddTransaction() {
+export default function AddTransaction({ onLogout }: { onLogout: () => void }) {
     const { policyId } = useParams<{ policyId: string }>();
     const [date, setDate] = useState("");
     const [type, setType] = useState("");
@@ -81,7 +81,7 @@ export default function AddTransaction() {
 
     return (
         <div>
-            <Header />
+            <Header onLogout={onLogout} />
             <div className="flex flex-col ml-20 mr-20 ">
                 <div className="text-2xl font-bold">Add New Transaction</div>
                 <div className="mt-8 space-y-2">

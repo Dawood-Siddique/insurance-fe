@@ -24,7 +24,7 @@ import axios from "axios";
 
 const baseURL = "http://127.0.0.1:8000/";
 
-export default function PolicyDetail() {
+export default function PolicyDetail({ onLogout }: { onLogout: () => void }) {
     const { policyId } = useParams<{ policyId: string }>();
     const [policyDetails, setPolicyDetails] = useState<any>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -88,7 +88,7 @@ export default function PolicyDetail() {
 
     return (
         <div>
-            <Header />
+            <Header onLogout={onLogout} />
             <main className="container mx-auto p-4 md:p-8">
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-3xl font-bold">Policy Detail</h1>
