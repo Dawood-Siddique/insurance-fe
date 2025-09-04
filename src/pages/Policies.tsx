@@ -17,8 +17,10 @@ type StatsData = {
     cancel_policy: number;
     average_rate: number;
     average_profit: number;
-    expected_money: number;
-    current_money: number;
+    expected_money_bank: number;
+    current_money_bank: number;
+    expected_money_cash: number;
+    current_money_cash: number;
   };
 };
 
@@ -33,8 +35,10 @@ export default function Policies({ onLogout }: { onLogout: () => void }) {
   );
   const [averageRate, setAverageRate] = useState<number | null>(null);
   const [averageProfit, setAverageProfit] = useState<number | null>(null);
-  const [expectedMoney, setExpectedMoney] = useState<number | null>(null);
-  const [currentMoney, setCurrentMoney] = useState<number | null>(null);
+  const [expectedMoneyBank, setExpectedMoneyBank] = useState<number | null>(null);
+  const [currentMoneyBank, setCurrentMoneyBank] = useState<number | null>(null);
+  const [expectedMoneyCash, setExpectedMoneyCash] = useState<number | null>(null);
+  const [currentMoneyCash, setCurrentMoneyCash] = useState<number | null>(null);
 
 
   const [statsData, setStatsData] = useState<StatsData | null>(null);
@@ -74,8 +78,10 @@ export default function Policies({ onLogout }: { onLogout: () => void }) {
         setLoss(data.loss);
         setAverageRate(data.average_rate);
         setAverageProfit(data.average_profit);
-        setExpectedMoney(data.expected_money);
-        setCurrentMoney(data.current_money);
+        setExpectedMoneyBank(data.expected_money_bank);
+        setCurrentMoneyBank(data.current_money_bank);
+        setExpectedMoneyCash(data.expected_money_cash);
+        setCurrentMoneyCash(data.current_money_cash);
       }
     }
   }, [selectedTimeFrame, statsData]);
@@ -141,15 +147,25 @@ export default function Policies({ onLogout }: { onLogout: () => void }) {
             {averageProfit !== null ? averageProfit : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
-            Expected Money
+            Expected Bank Money
             <br />
-            {expectedMoney !== null ? expectedMoney : 'Loading...'}
+            {expectedMoneyBank !== null ? expectedMoneyBank : 'Loading...'}
           </div>
 
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
-            Current Money
+            Current Bank Money
             <br />
-            {currentMoney !== null ? currentMoney : 'Loading...'}
+            {currentMoneyBank !== null ? currentMoneyBank : 'Loading...'}
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Exptected Cash Money
+            <br />
+            {expectedMoneyCash !== null ? expectedMoneyCash : 'Loading...'}
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Current Cash Money
+            <br />
+            {currentMoneyCash !== null ? currentMoneyCash : 'Loading...'}
           </div>
         </div>
 
