@@ -17,9 +17,9 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
   const [endDate, setEndDate] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const [insuranceCompanies, setInsuranceCompanies] = useState([]);
-  const [agents, setAgents] = useState([]);
-  const [clients, setClients] = useState([]);
+  const [insuranceCompanies, setInsuranceCompanies] = useState<{ value: string; label: string }[]>([]);
+  const [agents, setAgents] = useState<{ value: string; label: string }[]>([]);
+  const [clients, setClients] = useState<{ value: string; label: string }[]>([]);
 
   const handleGenerateReport = () => {
     // Implement report generation logic here
@@ -62,10 +62,10 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
 
   useEffect(() => {
     // Helper function to fetch and format data for the Combobox
-    const fetchData = (url: string, setter: any) => {
+    const fetchData = (url: string, setter: (data: { value: string; label: string }[]) => void) => {
       axios.get(url)
         .then(res => {
-          const formattedData = res.data.map(item => ({ value: item.id, label: item.name }));
+          const formattedData = res.data.map((item: any) => ({ value: item.id.toString(), label: item.name }));
           // const formattedData = data.map(item => ({ value: item.name, label: item.id }));
           setter(formattedData);
         })
@@ -96,6 +96,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
                 value={insuredName}
                 onChange={setInsuredName}
                 placeholder="Select Insured Name"
+                searchPlaceholder="Search clients..."
                 noResultsMessage="No clients found"
               />
             </div>
@@ -118,6 +119,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
                 value={agentName}
                 onChange={setagentName}
                 placeholder="Select Agent Name"
+                searchPlaceholder="Search agents..."
                 noResultsMessage="No agents found"
               />
             </div>
@@ -131,6 +133,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
                 value={insuranceCompany}
                 onChange={setInsuranceCompany}
                 placeholder="Select Company"
+                searchPlaceholder="Search companies..."
                 noResultsMessage="No insurance companies found"
               />
             </div>
@@ -148,6 +151,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
                 value={status}
                 onChange={setStatus}
                 placeholder="Select Status"
+                searchPlaceholder="Search status..."
                 noResultsMessage="No status found"
               />
             </div>

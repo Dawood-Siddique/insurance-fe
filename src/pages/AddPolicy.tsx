@@ -26,10 +26,10 @@ const paymentStatusObj = [
 export default function AddPolicy() {
     const navigate = useNavigate()
     // --- State for form inputs ---
-    // For foreign keys, we will store the ID. Initialize with null.
-    const [company, setCompany] = useState(null);
-    const [agentName, setAgentName] = useState(null);
-    const [insuredName, setInsuredName] = useState(null);
+    // For foreign keys, we will store the ID. Initialize with empty string.
+    const [company, setCompany] = useState("");
+    const [agentName, setAgentName] = useState("");
+    const [insuredName, setInsuredName] = useState("");
 
     // State for direct fields
     const [date, setDate] = useState("");
@@ -47,17 +47,17 @@ export default function AddPolicy() {
     const [error, setError] = useState<string | null>(null);
 
     // --- State for options fetched from backend ---
-    const [insuranceCompanies, setInsuranceCompanies] = useState([]);
-    const [agents, setAgents] = useState([]);
-    const [clients, setClients] = useState([]); // For "Insured Name"
+    const [insuranceCompanies, setInsuranceCompanies] = useState<{ value: string; label: string }[]>([]);
+    const [agents, setAgents] = useState<{ value: string; label: string }[]>([]);
+    const [clients, setClients] = useState<{ value: string; label: string }[]>([]); // For "Insured Name"
 
     // --- Fetch data from backend on component mount ---
     useEffect(() => {
         // Helper function to fetch and format data for the Combobox
-        const fetchData = (url: string, setter) => {
+        const fetchData = (url: string, setter: (data: { value: string; label: string }[]) => void) => {
             axios.get(url)
                 .then(res => {
-                    const formattedData = res.data.map(item => ({ value: item.id, label: item.name }));
+                    const formattedData = res.data.map((item: any) => ({ value: item.id.toString(), label: item.name }));
                     // const formattedData = data.map(item => ({ value: item.name, label: item.id }));
                     setter(formattedData);
                 })
@@ -75,7 +75,7 @@ export default function AddPolicy() {
 
     // --- Effect for calculating profit ---
     useEffect(() => {
-        const calculatedProfit = (clientPrice - newCoRates).toFixed(2);
+        const calculatedProfit = ((clientPrice ?? 0) - (newCoRates ?? 0)).toFixed(2);
         setProfit(calculatedProfit);
     }, [clientPrice, newCoRates]);
 
@@ -130,7 +130,7 @@ export default function AddPolicy() {
     };
 
     // --- Handle creating a new entity (e.g., Insurance Company) ---
-    const handleSaveNewCompany = (newCompanyName) => {
+    const handleSaveNewCompany = (newCompanyName: string) => {
         axios.post(`${baseURL}insurance-company/`, { name: newCompanyName }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -150,7 +150,7 @@ export default function AddPolicy() {
             });
     };
 
-    const handleSaveNewAgent = (newAgentName) => {
+    const handleSaveNewAgent = (newAgentName: string) => {
         axios.post(`${baseURL}agent/`, { name: newAgentName }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ export default function AddPolicy() {
 
     }
 
-    const handleSaveNewClient = (newClientName) => {
+    const handleSaveNewClient = (newClientName: string) => {
         axios.post(`${baseURL}client/`, { name: newClientName }, {
             headers: {
                 'Content-Type': 'application/json',

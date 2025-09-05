@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Report from './pages/Report';
@@ -8,7 +8,7 @@ import AddPolicy from './pages/AddPolicy';
 import AddTransaction from './pages/AddTransaction';
 import PolicyDetail from './pages/PolicyDetail';
 
-const ProtectedRoute = ({ token, children }: { token: string | null, children: JSX.Element }) => {
+const ProtectedRoute = ({ token, children }: { token: string | null, children: React.JSX.Element }) => {
   if (!token) {
     return <Navigate to="/login" replace />;
   }

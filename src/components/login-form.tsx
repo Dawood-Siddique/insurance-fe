@@ -47,7 +47,7 @@ export default function LoginForm({
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
-              {error && <ErrorAlert message={error} />}
+              {error && <ErrorAlert error={error} onClose={() => setError(null)} />}
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
                 <Input
