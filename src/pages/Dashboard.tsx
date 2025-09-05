@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ErrorAlert } from "@/components/error-alert";
 
-const baseURL = "http://127.0.0.1:8000/";
+const baseURL = import.meta.env.VITE_BASE_URL;
 const paymentStatusObj = [
     { value: 'active', label: 'Active' },
     { value: 'complete', label: 'Complete' },

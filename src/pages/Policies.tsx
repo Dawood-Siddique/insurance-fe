@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ErrorAlert } from "@/components/error-alert";
 
-const baseURL = "http://127.0.0.1:8000/";
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 type TimeFrame = "All" | "Daily" | "Weekly" | "Monthly" | "Month Start";
 

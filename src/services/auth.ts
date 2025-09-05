@@ -1,6 +1,6 @@
 import { type Credentials } from '@/types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/';
+const API_URL = import.meta.env.VITE_BASE_URL;
 
 export const login = async (credentials: Credentials) => {
   const response = await fetch(`${API_URL}auth/user/login/`, {

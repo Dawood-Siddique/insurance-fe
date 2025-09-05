@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useNavigate } from "react-router-dom";
 import { ErrorAlert } from "@/components/error-alert";
 
-const baseURL = "http://127.0.0.1:8000/"
+const baseURL = import.meta.env.VITE_BASE_URL;
 const Types = [
     { value: "cancelled", label: "cancelled" },
     { value: "payment", label: "payment" },

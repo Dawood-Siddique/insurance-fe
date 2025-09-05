@@ -13,7 +13,7 @@ import axios from "axios";
 import { useState } from "react";
 import { ErrorAlert } from "@/components/error-alert";
 
-const baseURL = "http://127.0.0.1:8000/";
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 export function TransactionTable({ transactions }: { transactions: Transaction[] }) {
     const [error, setError] = useState<string | null>(null);

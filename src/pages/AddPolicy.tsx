@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { ErrorAlert } from "@/components/error-alert";
 
 // The hardcoded data objects are removed, as we will fetch from the backend.
-const baseURL = "http://127.0.0.1:8000/"
+const baseURL = import.meta.env.VITE_BASE_URL;
 // const yourAuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODA5MDc2LCJpYXQiOjE3NTU3MjI2NzYsImp0aSI6ImQwNjljNDNlNzkwZTRjMWZiNmI4YThjYzhmZTVkOTAwIiwidXNlcl9pZCI6MX0.1o4ypV_CW9nnfMSitYoGmF9nzwouvvDVeRHVWFdOc7w"
 
 const paymentMethodObj = [

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ErrorAlert } from "@/components/error-alert";
 
-const baseURL = "http://127.0.0.1:8000/"
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 export default function Report({ onLogout }: { onLogout: () => void }) {
   const [insuredName, setInsuredName] = useState("");

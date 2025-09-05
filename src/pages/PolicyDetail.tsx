@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const baseURL = "http://127.0.0.1:8000/";
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 export default function PolicyDetail({ onLogout }: { onLogout: () => void }) {
     const { policyId } = useParams<{ policyId: string }>();
