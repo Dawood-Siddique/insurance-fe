@@ -14,6 +14,8 @@ type StatsData = {
     profit: number;
     revenue: number;
     loss: number;
+    expected_profit: number;
+    total_payback: number;
     cancel_policy: number;
     average_rate: number;
     average_profit: number;
@@ -30,6 +32,8 @@ export default function Policies({ onLogout }: { onLogout: () => void }) {
   const [profit, setProfit] = useState<number | null>(null);
   const [revenue, setRevenue] = useState<number | null>(null);
   const [loss, setLoss] = useState<number | null>(null);
+  const [expectedProfit, setExpectedProfit] = useState<number | null>(null);
+  const [totalPayback, setTotalPayback] = useState<number | null>(null);
   const [cancelledPolicies, setCancelledPolicies] = useState<number | null>(
     null
   );
@@ -74,6 +78,8 @@ export default function Policies({ onLogout }: { onLogout: () => void }) {
         setTotalPolicies(data.policy_count);
         setProfit(data.profit);
         setRevenue(data.revenue);
+        setExpectedProfit(data.expected_profit);
+        setTotalPayback(data.total_payback);
         setCancelledPolicies(data.cancel_policy);
         setLoss(data.loss);
         setAverageRate(data.average_rate);
@@ -130,6 +136,16 @@ export default function Policies({ onLogout }: { onLogout: () => void }) {
             Loss
             <br />
             {loss !== null ? loss : 'Loading...'}
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Expected Profit
+            <br />
+            {expectedProfit !== null ? expectedProfit : 'Loading...'}
+          </div>
+          <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
+            Total Payback
+            <br />
+            {totalPayback !== null ? totalPayback : 'Loading...'}
           </div>
           <div className="bg-gray-200 shadow-md rounded-lg p-10 m-10 w-74" >
             Cancelled Policies
