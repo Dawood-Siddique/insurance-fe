@@ -17,6 +17,7 @@ const paymentStatusObj = [
 
 export default function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [policies, setPolicies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [agents, setAgents] = useState([]);
   const [clients, setClients] = useState([]);
@@ -53,11 +54,14 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
 
   // Fetch policies
   useEffect(() => {
+    setLoading(true);
     axios.get(`${baseURL}policy/`).then((res) => {
       setPolicies(res.data);
+      setLoading(false);
     }).catch((error) => {
       console.error('Error fetching policies:', error);
       setError(error.message || "An unexpected error occurred.");
+      setLoading(false);
     });
   }, []);
 
@@ -241,7 +245,13 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
         </div>
         
         <div className="w-full">
-          <PolicyTable policies={filteredPolicies} />
+          {loading ? (
+            <div className="flex justify-center items-center py-8">
+              <div className="text-lg">Loading policies...</div>
+            </div>
+          ) : (
+            <PolicyTable policies={filteredPolicies} />
+          )}
         </div>
       </div>
       <ErrorAlert error={error} onClose={() => setError(null)} />
