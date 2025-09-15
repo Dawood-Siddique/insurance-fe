@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/ui/combobox"
+import { Autocomplete } from "@/components/ui/autocomplete"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { AddNewEntityDialog } from "@/components/add-new-entity-dialog"
@@ -50,6 +51,8 @@ export default function AddPolicy() {
     const [insuranceCompanies, setInsuranceCompanies] = useState<{ value: string; label: string }[]>([]);
     const [agents, setAgents] = useState<{ value: string; label: string }[]>([]);
     const [clients, setClients] = useState<{ value: string; label: string }[]>([]); // For "Insured Name"
+    const [policySuggestions, setPolicySuggestions] = useState<{ value: string; label: string }[]>([]);
+    const [loadingPolicies, setLoadingPolicies] = useState(true);
 
     // --- Fetch data from backend on component mount ---
     useEffect(() => {
@@ -71,6 +74,28 @@ export default function AddPolicy() {
         fetchData(`${baseURL}insurance-company/`, setInsuranceCompanies);
         fetchData(`${baseURL}agent/`, setAgents);
         fetchData(`${baseURL}client/`, setClients);
+
+        // Fetch policy suggestions
+        setLoadingPolicies(true);
+        console.log('Fetching policies from:', `${baseURL}policy/`);
+        axios.get(`${baseURL}policy/`)
+            .then(res => {
+                console.log('API Response:', res.data);
+                const formattedPolicies = res.data.map((policy: any) => ({
+                    value: policy.policy_number,
+                    label: policy.policy_number
+                }));
+                console.log('Formatted policies:', formattedPolicies);
+                setPolicySuggestions(formattedPolicies);
+                setLoadingPolicies(false);
+            })
+            .catch(error => {
+                console.error('Failed to fetch policies:', error);
+                console.error('Error details:', error.response ? error.response.data : error.message);
+                setPolicySuggestions([]); // Clear suggestions on error
+                setLoadingPolicies(false);
+                // Don't set error here as it's not critical for form submission
+            });
     }, []);
 
     // --- Effect for calculating profit ---
@@ -271,7 +296,15 @@ export default function AddPolicy() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Policy Number</label>
-                                <Input type="text" value={policyNumber} onChange={(e) => setPolicyNumber(e.target.value)} />
+                                <Autocomplete
+                                    items={policySuggestions}
+                                    value={policyNumber}
+                                    onChange={setPolicyNumber}
+                                    placeholder="Enter policy number..."
+                                    noResultsMessage="No matching policies found."
+                                    loadingMessage="Loading policy numbers..."
+                                    loading={loadingPolicies}
+                                />
                             </div>
                         </div>
                     </div>
