@@ -2,6 +2,7 @@ export interface Policy {
   id: number;
   issue_date: string;
   insurance_company: string;
+  vendor: string;
   client: string;
   policy_number: string;
   car_model: string;

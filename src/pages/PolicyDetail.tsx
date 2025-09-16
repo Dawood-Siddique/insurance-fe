@@ -110,10 +110,11 @@ export default function PolicyDetail({ onLogout }: { onLogout: () => void }) {
                             <DetailItem label="Issue Date" value={policyDetails?.issue_date} />
                             <DetailItem
                                 label="Insurance Company"
-                                value={policyDetails?.insurance_company}
+                                value={policyDetails?.insurance_company  ?? ""}
                             />
-                            <DetailItem label="Client" value={policyDetails?.client} />
-                            <DetailItem label="Agent Name" value={policyDetails?.agent} />
+                            <DetailItem label="Client" value={policyDetails?.client  ?? ""} />
+                            <DetailItem label="Agent Name" value={policyDetails?.agent  ?? ""} />
+                            <DetailItem label="Vendor" value={policyDetails?.vendor ?? ""} />
                             <DetailItem
                                 label="Gross Price"
                                 value={policyDetails?.gross_price}

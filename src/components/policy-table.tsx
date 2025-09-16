@@ -22,6 +22,7 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
               <TableHead>Issue Date</TableHead>
               <TableHead>Insurance Company</TableHead>
               <TableHead>Insured Name</TableHead>
+              <TableHead>Vendor</TableHead>
               <TableHead>Policy Number</TableHead>
               <TableHead>Car Model</TableHead>
               <TableHead>Engine Type</TableHead>
@@ -41,6 +42,7 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
                 <TableCell>{policy.issue_date}</TableCell>
                 <TableCell>{policy.insurance_company}</TableCell>
                 <TableCell>{policy.client}</TableCell>
+                <TableCell>{policy.vendor}</TableCell>
                 <TableCell>{policy.policy_number}</TableCell>
                 <TableCell>{policy.car_model}</TableCell>
                 <TableCell>{policy.engine_type}</TableCell>
