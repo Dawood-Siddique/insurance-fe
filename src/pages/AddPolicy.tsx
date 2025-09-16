@@ -8,9 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"
 import { ErrorAlert } from "@/components/error-alert";
 
-// The hardcoded data objects are removed, as we will fetch from the backend.
 const baseURL = import.meta.env.VITE_BASE_URL;
-// const yourAuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODA5MDc2LCJpYXQiOjE3NTU3MjI2NzYsImp0aSI6ImQwNjljNDNlNzkwZTRjMWZiNmI4YThjYzhmZTVkOTAwIiwidXNlcl9pZCI6MX0.1o4ypV_CW9nnfMSitYoGmF9nzwouvvDVeRHVWFdOc7w"
 
 const paymentMethodObj = [
     { value: 'cash', label: 'Cash' },
@@ -31,6 +29,7 @@ export default function AddPolicy() {
     const [company, setCompany] = useState("");
     const [agentName, setAgentName] = useState("");
     const [insuredName, setInsuredName] = useState("");
+    const [vendor, setVendor] = useState("");
 
     // State for direct fields
     const [date, setDate] = useState("");
@@ -51,6 +50,7 @@ export default function AddPolicy() {
     const [insuranceCompanies, setInsuranceCompanies] = useState<{ value: string; label: string }[]>([]);
     const [agents, setAgents] = useState<{ value: string; label: string }[]>([]);
     const [clients, setClients] = useState<{ value: string; label: string }[]>([]); // For "Insured Name"
+    const [vendors, setVendors] = useState<{ value: string; label: string }[]>([]);
     const [policySuggestions, setPolicySuggestions] = useState<{ value: string; label: string }[]>([]);
     const [loadingPolicies, setLoadingPolicies] = useState(true);
 
@@ -74,6 +74,7 @@ export default function AddPolicy() {
         fetchData(`${baseURL}insurance-company/`, setInsuranceCompanies);
         fetchData(`${baseURL}agent/`, setAgents);
         fetchData(`${baseURL}client/`, setClients);
+        fetchData(`${baseURL}vendor/`, setVendors);
 
         // Fetch policy suggestions
         setLoadingPolicies(true);
@@ -124,6 +125,7 @@ export default function AddPolicy() {
             car_model: carModel,
             engine_type: engineType,
             agent: agentName, // Send the ID
+            vendor: vendor, // Send the ID
             gross_price: grossPrice,
             co_rate: newCoRates,
             client_price: clientPrice,
@@ -211,7 +213,27 @@ export default function AddPolicy() {
                 setInsuredName(newClient.id);
             })
             .catch(error => {
-                console.error('Failed to create new agent:', error.response ? error.response.data : error)
+                console.error('Failed to create new client:', error.response ? error.response.data : error)
+                setError(error.message || "An unexpected error occurred.");
+            });
+    }
+
+    const handleSaveNewVendor = (newVendorName: string) => {
+        axios.post(`${baseURL}vendor/`, { name: newVendorName }, {
+            headers: {
+                'Content-Type': 'application/json',
+
+            }
+        })
+            .then(res => {
+                const newVendor = res.data;
+                // Add the new vendor to the dropdown list
+                const newOption = { value: newVendor.id, label: newVendor.name };
+                setVendors(prev => [...prev, newOption]);
+                setVendor(newVendor.id);
+            })
+            .catch(error => {
+                console.error('Failed to create new vendor:', error.response ? error.response.data : error)
                 setError(error.message || "An unexpected error occurred.");
             });
     }
@@ -293,6 +315,25 @@ export default function AddPolicy() {
                                     placeholder="Select Agent..."
                                     searchPlaceholder="Search Agent..."
                                     noResultsMessage="No Agent found." />
+                            </div>
+                            <div>
+                                <div className="flex flex-wrap items-center gap-2 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Vendor</label>
+                                    <AddNewEntityDialog
+                                        dialogTitle="Add New Vendor"
+                                        dialogDescription="Enter the name of the new vendor."
+                                        inputLabel="Vendor Name"
+                                        triggerText="Add New Vendor?"
+                                        onSave={handleSaveNewVendor}
+                                    />
+                                </div>
+                                <Combobox
+                                    items={vendors}
+                                    value={vendor}
+                                    onChange={setVendor}
+                                    placeholder="Select Vendor..."
+                                    searchPlaceholder="Search Vendor..."
+                                    noResultsMessage="No Vendor found." />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Policy Number</label>
