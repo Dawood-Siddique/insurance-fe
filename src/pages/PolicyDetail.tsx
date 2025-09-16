@@ -119,7 +119,7 @@ export default function PolicyDetail({ onLogout }: { onLogout: () => void }) {
                                 label="Gross Price"
                                 value={policyDetails?.gross_price}
                             />
-                            <DetailItem label="CO Rate" value={policyDetails?.co_rate} />
+                            <DetailItem label="Net Rate" value={policyDetails?.co_rate} />
                             <DetailItem
                                 label="Client Price"
                                 value={policyDetails?.client_price}

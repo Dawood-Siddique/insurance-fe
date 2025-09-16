@@ -28,7 +28,7 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
               <TableHead>Engine Type</TableHead>
               <TableHead>Agent Name</TableHead>
               <TableHead>Gross Price</TableHead>
-              <TableHead>CO Rate</TableHead>
+              <TableHead>Net Rate</TableHead>
               <TableHead>Client Price</TableHead>
               <TableHead>Expected Profit</TableHead>
               <TableHead>Current P/L</TableHead>

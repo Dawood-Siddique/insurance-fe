@@ -359,7 +359,7 @@ export default function AddPolicy() {
                                 <Input type="number" value={grossPrice} onChange={(e) => setGrossPrice(parseFloat(e.target.value) || 0)} />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">New CO Rates</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Net Rates</label>
                                 <Input type="number" value={newCoRates} onChange={(e) => setNewCoRates(parseFloat(e.target.value) || 0)} />
                             </div>
                             <div>
