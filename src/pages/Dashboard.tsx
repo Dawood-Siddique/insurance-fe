@@ -22,14 +22,16 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [agents, setAgents] = useState([]);
   const [clients, setClients] = useState([]);
   const [insuranceCompanies, setInsuranceCompanies] = useState([]);
+  const [vendors, setVendors] = useState([]);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Filter states
   const [selectedAgent, setSelectedAgent] = useState('');
   const [selectedClient, setSelectedClient] = useState('');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [selectedInsuranceCompany, setSelectedInsuranceCompany] = useState('');
   const [selectedPaymentStatus, setSelectedPaymentStatus] = useState('');
+  const [selectedVendor, setSelectedVendor] = useState('');
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -50,6 +52,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
     setDateRange({ start: '', end: '' });
     setSelectedInsuranceCompany('');
     setSelectedPaymentStatus('');
+    setSelectedVendor('');
   };
 
   // Fetch policies
@@ -90,16 +93,25 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
       console.error('Error fetching insurance companies:', error);
       setError(error.message || "An unexpected error occurred.");
     });
+
+    // Fetch vendors
+    axios.get(`${baseURL}vendor/`).then((res) => {
+      setVendors(res.data);
+    }).catch((error) => {
+      console.error('Error fetching vendors:', error);
+      setError(error.message || "An unexpected error occurred.");
+    });
   }, []);
 
   // Apply all filters
   const filteredPolicies = useMemo(() => {
     return policies.filter((policy: any) => {
       // Text search filter
-      if (searchQuery && 
+      if (searchQuery &&
           !policy.policy_number?.toLowerCase().includes(searchQuery.toLowerCase()) &&
           !policy.client?.toLowerCase().includes(searchQuery.toLowerCase()) &&
-          !policy.insurance_company?.toLowerCase().includes(searchQuery.toLowerCase())) {
+          !policy.insurance_company?.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          !policy.vendor?.toLowerCase().includes(searchQuery.toLowerCase())) {
         return false;
       }
 
@@ -115,6 +127,11 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
 
       // Insurance company filter
       if (selectedInsuranceCompany && policy.insurance_company !== selectedInsuranceCompany) {
+        return false;
+      }
+
+      // Vendor filter
+      if (selectedVendor && policy.vendor !== selectedVendor) {
         return false;
       }
 
@@ -136,7 +153,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
 
       return true;
     });
-  }, [policies, searchQuery, selectedAgent, selectedClient, dateRange, selectedInsuranceCompany, selectedPaymentStatus]);
+  }, [policies, searchQuery, selectedAgent, selectedClient, dateRange, selectedInsuranceCompany, selectedPaymentStatus, selectedVendor]);
 
   return (
     <div>
@@ -208,7 +225,23 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
               </SelectContent>
             </Select>
           </div>
-          
+
+          <div className="w-40">
+            <label className="block text-sm font-medium mb-1">Vendor</label>
+            <Select value={selectedVendor} onValueChange={setSelectedVendor}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select vendor" />
+              </SelectTrigger>
+              <SelectContent>
+                {vendors.map((vendor: any) => (
+                  <SelectItem key={vendor.id || vendor.name} value={vendor.name}>
+                    {vendor.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="w-40">
             <label className="block text-sm font-medium mb-1">Payment Status</label>
             <Select value={selectedPaymentStatus} onValueChange={setSelectedPaymentStatus}>
