@@ -12,6 +12,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
   const [insuredName, setInsuredName] = useState("");
   const [agentName, setagentName] = useState("");
   const [insuranceCompany, setInsuranceCompany] = useState("");
+  const [vendor, setVendor] = useState("");
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -20,6 +21,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
   const [insuranceCompanies, setInsuranceCompanies] = useState<{ value: string; label: string }[]>([]);
   const [agents, setAgents] = useState<{ value: string; label: string }[]>([]);
   const [clients, setClients] = useState<{ value: string; label: string }[]>([]);
+  const [vendors, setVendors] = useState<{ value: string; label: string }[]>([]);
 
   const handleGenerateReport = () => {
     // Implement report generation logic here
@@ -27,6 +29,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
     console.log("Insured Name:", insuredName);
     console.log("Agent Name:", agentName);
     console.log("Insurance Company:", insuranceCompany);
+    console.log("Vendor:", vendor);
     console.log("Status:", status);
     console.log("Start Date:", startDate);
     console.log("End Date:", endDate);
@@ -38,6 +41,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
         insured_name: insuredName,
         agent_name: agentName,
         insurance_company: insuranceCompany,
+        vendor: vendor,
         status: status,
         start_date: startDate,
         end_date: endDate
@@ -79,6 +83,7 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
     fetchData(`${baseURL}insurance-company/`, setInsuranceCompanies);
     fetchData(`${baseURL}agent/`, setAgents);
     fetchData(`${baseURL}client/`, setClients);
+    fetchData(`${baseURL}vendor/`, setVendors);
   }, []);
   return (
     <div>
@@ -135,6 +140,20 @@ export default function Report({ onLogout }: { onLogout: () => void }) {
                 placeholder="Select Company"
                 searchPlaceholder="Search companies..."
                 noResultsMessage="No insurance companies found"
+              />
+            </div>
+          </div>
+
+          <div className="m-5">
+            <div>Vendor</div>
+            <div>
+              <Combobox
+                items={vendors}
+                value={vendor}
+                onChange={setVendor}
+                placeholder="Select Vendor"
+                searchPlaceholder="Search vendors..."
+                noResultsMessage="No vendors found"
               />
             </div>
           </div>
